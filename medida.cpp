@@ -160,28 +160,28 @@ return a;
 
 template <class T> medida operator+(const medida& a,const T& b){
 medida aux;
-aux.valor[0]=a.valor[0]+b;
+aux.valor[0]=a.valor[0]+(double)b;
 aux.valor[1]=a.valor[1];
 return aux;
 }
 
 template <class T> medida operator-(const medida& a,const T& b){
 medida aux;
-aux.valor[0]=a.valor[0]-b;
+aux.valor[0]=a.valor[0]-(double)b;
 aux.valor[1]=a.valor[1];
 return aux;
 }
 
 template <class T> medida operator*(const medida& a,const T& b){
 medida aux;
-aux.valor[0]=a.valor[0]*b;
+aux.valor[0]=a.valor[0]*(double)b;
 aux.valor[1]=a.valor[1];
 return aux;
 }
 
 template <class T> medida operator/(const medida& a,const T& b){
 medida aux;
-aux.valor[0]=a.valor[0]/b;
+aux.valor[0]=a.valor[0]/(double)b;
 aux.valor[1]=a.valor[1];
 return aux;
 }
@@ -189,82 +189,82 @@ return aux;
 
 template <class T> medida operator+(const T& a,const medida& b){
 medida aux;
-aux.valor[0]=b.valor[0]+a;
+aux.valor[0]=b.valor[0]+(double)a;
 aux.valor[1]=b.valor[1];
 return aux;
 }
 
 template <class T> medida operator-(const T& a,const medida& b){
 medida aux;
-aux.valor[0]=b.valor[0]-a;
+aux.valor[0]=b.valor[0]-(double)a;
 aux.valor[1]=b.valor[1];
 return aux;
 }
 
 template <class T> medida operator*(const T& a,const medida& b){
 medida aux;
-aux.valor[0]=b.valor[0]*a;
+aux.valor[0]=b.valor[0]*(double)a;
 aux.valor[1]=b.valor[1];
 return aux;
 }
 
 template <class T> medida operator/(const T& a,const medida& b){
 medida aux;
-aux.valor[0]=b.valor[0]/a;
+aux.valor[0]=b.valor[0]/(double)a;
 aux.valor[1]=b.valor[1];
 return aux;
 }
 
 
 template <class T> medida operator=(medida& a,const T& b){
-a.valor[0]=b;
+a.valor[0]=(double)b;
 a.valor[1]=0;
 return a;
 }
 
 template <class T> medida operator+=(medida& a,const T& b){
-a.valor[0]+=b;
+a.valor[0]+=(double)b;
 return a;
 }
 
 template <class T> medida operator-=(medida& a,const T& b){
-a.valor[0]-=b;
+a.valor[0]-=(double)b;
 return a;
 }
 
 template <class T> medida operator*=(medida& a,const T& b){
-a.valor[0]*=b;
+a.valor[0]*=(double)b;
 return a;
 }
 
 template <class T> medida operator/=(medida& a,const T& b){
-a.valor[0]/=b;
+a.valor[0]/=(double)b;
 return a;
 }
 
 
 template <class T> T operator=(T& a,const medida& b){
-a=b.valor[0];
+a=(T)b.valor[0];
 return a;
 }
 
 template <class T> T operator+=(T& a,const medida& b){
-a+=b.valor[0];
+a+=(T)b.valor[0];
 return a;
 }
 
 template <class T> T operator-=(T& a,const medida& b){
-a-=b.valor[0];
+a-=(T)b.valor[0];
 return a;
 }
 
 template <class T> T operator*=(T& a,const medida& b){
-a*=b.valor[0];
+a*=(T)b.valor[0];
 return a;
 }
 
 template <class T> T operator/=(T& a,const medida& b){
-a/=b.valor[0];
+a/=(T)b.valor[0];
 return a;
 }
 
