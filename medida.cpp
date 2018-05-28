@@ -51,18 +51,13 @@ friend medida atan(const medida&);
 
 friend double erro(const medida&,const medida&);
 
-medida(){
-valor[0]=0;
-valor[1]=0;
-}
-
-medida(const double& a,const double& b=0){
+medida(const double& a=0,const double& b=0){
 valor[0]=a;
 valor[1]=b;
 }
 
-double medicao() {return valor[0];}
-double erro() {return valor[1];}
+double medicao() {return *valor;}
+double erro() {return *(valor+1);}
 
 void imprime(){
 printf("%lf±%lf\n",valor[0],valor[1]);
