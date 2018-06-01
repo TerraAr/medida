@@ -14,6 +14,7 @@ medida operator+(const medida&);
 medida operator-(const medida&);
 medida operator*(const medida&);
 medida operator/(const medida&);
+double operator%(const medida&);
 
 medida operator++();
 medida operator--();
@@ -93,6 +94,12 @@ aux.valor[0]=(valor[0]+valor[1])/(b.valor[0]-b.valor[1]);
 aux.valor[1]=(valor[0]-valor[1])/(b.valor[0]+b.valor[1]);
 aux.valor[0]=(aux.valor[0]+aux.valor[1])/2;
 aux.valor[1]=aux.valor[0]-aux.valor[1];
+return aux;
+}
+
+double medida::operator%(const medida& b){
+double aux;
+aux=100.*(b.valor[0]-valor[0])/b.valor[0];
 return aux;
 }
 
