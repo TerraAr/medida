@@ -2,8 +2,17 @@
 #include<stdio.h>
 
 #define PI M_PI
+#define NEPHER M_E
 
 #define abs(x) (x<0)?-(x):x
+
+#define sec(x) 1/cos(x)
+#define csc(x) 1/sin(x)
+#define cot(x) 1/tan(x)
+
+#define asec(x) acos(1/x)
+#define acsc(x) asin(1/x)
+#define acot(x) atan(1/x)
 
 class medida{
 private:
@@ -239,8 +248,8 @@ return aux;
 
 medida sin(const medida& a){
 medida aux;
-aux.valor[0]=sin(a.valor[0]+a.valor[1]);
-aux.valor[1]=sin(a.valor[0]-a.valor[1]);
+aux.valor[0]=(abs(a.valor[0]-PI/2)<a.valor[1])?1:sin(a.valor[0]+a.valor[1]);
+aux.valor[1]=(abs(a.valor[0]+PI/2)<a.valor[1])?-1:sin(a.valor[0]-a.valor[1]);
 aux.valor[0]=(aux.valor[0]+aux.valor[1])/2;
 aux.valor[1]=abs(aux.valor[0]-aux.valor[1]);
 return aux;
@@ -248,8 +257,8 @@ return aux;
 
 medida cos(const medida& a){
 medida aux;
-aux.valor[0]=cos(a.valor[0]+a.valor[1]);
-aux.valor[1]=cos(a.valor[0]-a.valor[1]);
+aux.valor[0]=(abs(a.valor[0])<a.valor[1])?1:cos(a.valor[0]+a.valor[1]);
+aux.valor[1]=(abs(a.valor[0]+PI)<a.valor[1])?-1:sin(a.valor[0]-a.valor[1]);
 aux.valor[0]=(aux.valor[0]+aux.valor[1])/2;
 aux.valor[1]=abs(aux.valor[0]-aux.valor[1]);
 return aux;
