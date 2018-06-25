@@ -4,8 +4,6 @@
 #define PI M_PI
 #define NEPHER M_E
 
-#define abs(x) (x<0)?-(x):x
-
 #define sec(x) 1/cos(x)
 #define csc(x) 1/sin(x)
 #define cot(x) 1/tan(x)
@@ -13,6 +11,8 @@
 #define asec(x) acos(1/x)
 #define acsc(x) asin(1/x)
 #define acot(x) atan(1/x)
+
+double abs(double x) {return (x<0)?-(x):x;}
 
 class medida{
 private:
@@ -35,7 +35,6 @@ medida operator-=(const medida&);
 medida operator*=(const medida&);
 medida operator/=(const medida&);
 
-template <class T> medida operator=(const T&);
 template <class T> friend medida operator+=(medida&,const T&);
 template <class T> friend medida operator-=(medida&,const T&);
 template <class T> friend medida operator*=(medida&,const T&);
@@ -90,19 +89,15 @@ return aux;
 
 medida medida::operator*(const medida& b){
 medida aux;
-aux.valor[0]=(valor[0]+valor[1])*(b.valor[0]+b.valor[1]);
-aux.valor[1]=(valor[0]-valor[1])*(b.valor[0]-b.valor[1]);
-aux.valor[0]=(aux.valor[0]+aux.valor[1])/2;
-aux.valor[1]=aux.valor[0]-aux.valor[1];
+aux.valor[0]=valor[0]*b.valor[0]+valor[1]*b.valor[1];
+aux.valor[1]=valor[0]*b.valor[1]+valor[1]*b.valor[0];
 return aux;
 }
 
 medida medida::operator/(const medida& b){
 medida aux;
-aux.valor[0]=(valor[0]+valor[1])/(b.valor[0]-b.valor[1]);
-aux.valor[1]=(valor[0]-valor[1])/(b.valor[0]+b.valor[1]);
-aux.valor[0]=(aux.valor[0]+aux.valor[1])/2;
-aux.valor[1]=aux.valor[0]-aux.valor[1];
+aux.valor[0]=(valor[0]*b.valor[0]+valor[1]*b.valor[1]) / ((b.valor[0]+b.valor[1])*(b.valor[0]-b.valor[1]));
+aux.valor[1]=(valor[0]*b.valor[1]+valor[1]*b.valor[0]) / ((b.valor[0]+b.valor[1])*(b.valor[0]-b.valor[1]));
 return aux;
 }
 
@@ -165,38 +160,6 @@ valor[1]=valor[0]-valor[1];
 return *this;
 }
 
-
-template <class T> medida medida::operator=(const T& b){
-valor[0]=(double)b;
-valor[1]=0;
-return *this;
-}
-
-template <class T> medida operator+=(medida& a,const T& b){
-a.valor[0]+=(double)b;
-return a;
-}
-
-template <class T> medida operator-=(medida& a,const T& b){
-a.valor[0]-=(double)b;
-return a;
-}
-
-template <class T> medida operator*=(medida& a,const T& b){
-a.valor[0]*=(double)b;
-return a;
-}
-
-template <class T> medida operator/=(medida& a,const T& b){
-a.valor[0]/=(double)b;
-return a;
-}
-
-
-template <class T> T medida::operator=(const medida& b){
-*this=(T)b.valor[0];
-return *this;
-}
 
 template <class T> T operator+=(T& a,const medida& b){
 a+=(T)b.valor[0];
