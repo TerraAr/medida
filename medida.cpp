@@ -35,11 +35,6 @@ medida operator-=(const medida&);
 medida operator*=(const medida&);
 medida operator/=(const medida&);
 
-template <class T> friend medida operator+=(medida&,const T&);
-template <class T> friend medida operator-=(medida&,const T&);
-template <class T> friend medida operator*=(medida&,const T&);
-template <class T> friend medida operator/=(medida&,const T&);
-
 template <class T> T operator=(const medida&);
 template <class T> friend T operator+=(T&,const medida&);
 template <class T> friend T operator-=(T&,const medida&);
@@ -96,8 +91,8 @@ return aux;
 
 medida medida::operator/(const medida& b){
 medida aux;
-aux.valor[0]=(valor[0]*b.valor[0]+valor[1]*b.valor[1]) / ((b.valor[0]+b.valor[1])*(b.valor[0]-b.valor[1]));
-aux.valor[1]=(valor[0]*b.valor[1]+valor[1]*b.valor[0]) / ((b.valor[0]+b.valor[1])*(b.valor[0]-b.valor[1]));
+aux.valor[0]=(valor[0]*b.valor[0] + valor[1]*b.valor[1]) / ((b.valor[0]+b.valor[1]) * (b.valor[0]-b.valor[1]));
+aux.valor[1]=(valor[0]*b.valor[1] + valor[1]*b.valor[0]) / ((b.valor[0]+b.valor[1]) * (b.valor[0]-b.valor[1]));
 return aux;
 }
 
@@ -145,18 +140,16 @@ return *this;
 }
 
 medida medida::operator*=(const medida& b){
-double c=(valor[0]+valor[1])*(b.valor[0]+b.valor[1]);
-valor[1]=(valor[0]-valor[1])*(b.valor[0]-b.valor[1]);
-valor[0]=(c+valor[1])/2;
-valor[1]=valor[0]-valor[1];
+double c=valor[0]*b.valor[0] + valor[1]*b.valor[1];
+valor[1]=valor[0]*b.valor[1] + valor[1]*b.valor[0];
+valor[0]=c;
 return *this;
 }
 
 medida medida::operator/=(const medida& b){
-double c=(valor[0]+valor[1])/(b.valor[0]-b.valor[1]);
-valor[1]=(valor[0]-valor[1])/(b.valor[0]+b.valor[1]);
-valor[0]=(c+valor[1])/2;
-valor[1]=valor[0]-valor[1];
+double c=(valor[0]*b.valor[0] + valor[1]*b.valor[1]) / ((b.valor[0]+b.valor[1]) * (b.valor[0]-b.valor[1]));
+valor[1]=(valor[0]*b.valor[1] + valor[1]*b.valor[0]) / ((b.valor[0]+b.valor[1]) * (b.valor[0]-b.valor[1]));
+valor[0]=c;
 return *this;
 }
 
@@ -228,15 +221,13 @@ return aux;
 }
 
 medida tan(const medida& a){
-if(abs(a.valor[0]-PI/2)<a.valor[1]){
-medida s;
-return s;
-}
 medida aux;
+if(abs(a.valor[0]-PI/2)<a.valor[1] || abs(a.valor[0]+PI/2)<a.valor[1]) return aux;
+
 aux.valor[0]=tan(a.valor[0]+a.valor[1]);
 aux.valor[1]=tan(a.valor[0]-a.valor[1]);
 aux.valor[0]=(aux.valor[0]+aux.valor[1])/2;
-aux.valor[1]=abs(aux.valor[0]-aux.valor[1]);
+aux.valor[1]=aux.valor[0]-aux.valor[1];
 return aux;
 }
 
