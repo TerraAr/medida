@@ -1,4 +1,4 @@
-#include<cmath>
+#include<math.h>
 #include<stdio.h>
 
 #define PI M_PI
@@ -12,34 +12,42 @@
 #define acsc(x) asin(1/x)
 #define acot(x) atan(1/x)
 
-double abs(double x) {return (x<0)?-(x):x;}
+inline double abs(double x) {return (x<0)?-(x):x;}
 
 class medida{
 private:
 double valor[2];
 
+bool flag;
+
 public:
-medida operator+(const medida&);
-medida operator-(const medida&);
-medida operator*(const medida&);
-medida operator/(const medida&);
-double operator%(const medida&);
+medida operator+(const medida);
+medida operator-(const medida);
+medida operator*(const medida);
+medida operator/(const medida);
+double operator%(const medida);
+
+medida operator+(const double);
+medida operator-(const double);
+medida operator*(const double);
+medida operator/(const double);
+double operator%(const double);
 
 medida operator++();
 medida operator--();
 medida operator-();
 
-medida operator=(const medida&);
-medida operator+=(const medida&);
-medida operator-=(const medida&);
-medida operator*=(const medida&);
-medida operator/=(const medida&);
+medida operator=(const medida);
+medida operator+=(const medida);
+medida operator-=(const medida);
+medida operator*=(const medida);
+medida operator/=(const medida);
 
-template <class T> T operator=(const medida&);
-template <class T> friend T operator+=(T&,const medida&);
-template <class T> friend T operator-=(T&,const medida&);
-template <class T> friend T operator*=(T&,const medida&);
-template <class T> friend T operator/=(T&,const medida&);
+medida operator=(const double);
+medida operator+=(const double);
+medida operator-=(const double);
+medida operator*=(const double);
+medida operator/=(const double);
 
 friend medida pow(const medida&,const double);
 friend medida sqrt(const medida&);
@@ -53,9 +61,7 @@ friend medida asin(const medida&);
 friend medida acos(const medida&);
 friend medida atan(const medida&);
 
-friend double erro(const medida&,const medida&);
-
-medida(const double& a=0,const double& b=0){
+medida(const double a=0,const double b=0) : flag(0) {
 valor[0]=a;
 valor[1]=b;
 }
@@ -68,37 +74,72 @@ printf("%lf±%lf\n",valor[0],valor[1]);
 }
 };
 
-medida medida::operator+(const medida& b){
+medida medida::operator+(const medida b){
 medida aux;
 aux.valor[0]=valor[0]+b.valor[0];
 aux.valor[1]=valor[1]+b.valor[1];
 return aux;
 }
 
-medida medida::operator-(const medida& b){
+medida medida::operator-(const medida b){
 medida aux;
 aux.valor[0]=valor[0]-b.valor[0];
 aux.valor[1]=valor[1]+b.valor[1];
 return aux;
 }
 
-medida medida::operator*(const medida& b){
+medida medida::operator*(const medida b){
 medida aux;
 aux.valor[0]=valor[0]*b.valor[0]+valor[1]*b.valor[1];
-aux.valor[1]=valor[0]*b.valor[1]+valor[1]*b.valor[0];
+aux.valor[1]=abs(valor[0]*b.valor[1]+valor[1]*b.valor[0]);
 return aux;
 }
 
-medida medida::operator/(const medida& b){
+medida medida::operator/(const medida b){
 medida aux;
 aux.valor[0]=(valor[0]*b.valor[0] + valor[1]*b.valor[1]) / ((b.valor[0]+b.valor[1]) * (b.valor[0]-b.valor[1]));
-aux.valor[1]=(valor[0]*b.valor[1] + valor[1]*b.valor[0]) / ((b.valor[0]+b.valor[1]) * (b.valor[0]-b.valor[1]));
+aux.valor[1]=abs((valor[0]*b.valor[1] + valor[1]*b.valor[0]) / ((b.valor[0]+b.valor[1]) * (b.valor[0]-b.valor[1])));
 return aux;
 }
 
-double medida::operator%(const medida& b){
+double medida::operator%(const medida b){
 double aux;
 aux=100.*(b.valor[0]-valor[0])/b.valor[0];
+return aux;
+}
+
+
+medida medida::operator+(const double a){
+medida aux;
+aux.valor[0]=valor[0]+a;
+aux.valor[1]=valor[1];
+return aux;
+}
+
+medida medida::operator-(const double a){
+medida aux;
+aux.valor[0]=valor[0]-a;
+aux.valor[1]=valor[1];
+return aux;
+}
+
+medida medida::operator*(const double a){
+medida aux;
+aux.valor[0]=valor[0]*a;
+aux.valor[1]=valor[1]*abs(a);
+return aux;
+}
+
+medida medida::operator/(const double a){
+medida aux;
+aux.valor[0]=valor[0]/a;
+aux.valor[1]=valor[1]/abs(a);
+return aux;
+}
+
+double medida::operator%(const double a){
+double aux;
+aux=100.*(a-valor[0])/a;
 return aux;
 }
 
@@ -121,57 +162,65 @@ return aux;
 }
 
 
-medida medida::operator=(const medida& b){
+medida medida::operator=(const medida b){
 valor[0]=b.valor[0];
 valor[1]=b.valor[1];
 return *this;
 }
 
-medida medida::operator+=(const medida& b){
+medida medida::operator+=(const medida b){
 valor[0]+=b.valor[0];
 valor[1]+=b.valor[1];
 return *this;
 }
 
-medida medida::operator-=(const medida& b){
+medida medida::operator-=(const medida b){
 valor[0]-=b.valor[0];
 valor[1]+=b.valor[1];
 return *this;
 }
 
-medida medida::operator*=(const medida& b){
+medida medida::operator*=(const medida b){
 double c=valor[0]*b.valor[0] + valor[1]*b.valor[1];
-valor[1]=valor[0]*b.valor[1] + valor[1]*b.valor[0];
+valor[1]=abs(valor[0]*b.valor[1] + valor[1]*b.valor[0]);
 valor[0]=c;
 return *this;
 }
 
-medida medida::operator/=(const medida& b){
+medida medida::operator/=(const medida b){
 double c=(valor[0]*b.valor[0] + valor[1]*b.valor[1]) / ((b.valor[0]+b.valor[1]) * (b.valor[0]-b.valor[1]));
-valor[1]=(valor[0]*b.valor[1] + valor[1]*b.valor[0]) / ((b.valor[0]+b.valor[1]) * (b.valor[0]-b.valor[1]));
+valor[1]=abs((valor[0]*b.valor[1] + valor[1]*b.valor[0]) / ((b.valor[0]+b.valor[1]) * (b.valor[0]-b.valor[1])));
 valor[0]=c;
 return *this;
 }
 
 
-template <class T> T operator+=(T& a,const medida& b){
-a+=(T)b.valor[0];
-return a;
+medida medida::operator=(const double a){
+valor[flag]=a;
+flag=!flag;
+return *this;
 }
 
-template <class T> T operator-=(T& a,const medida& b){
-a-=(T)b.valor[0];
-return a;
+medida medida::operator+=(const double a){
+valor[0]+=a;
+return *this;
 }
 
-template <class T> T operator*=(T& a,const medida& b){
-a*=(T)b.valor[0];
-return a;
+medida medida::operator-=(const double a){
+valor[0]-=a;
+return *this;
 }
 
-template <class T> T operator/=(T& a,const medida& b){
-a/=(T)b.valor[0];
-return a;
+medida medida::operator*=(const double a){
+valor[0]*=a;
+valor[1]*=abs(a);
+return *this;
+}
+
+medida medida::operator/=(const double a){
+valor[0]/=a;
+valor[1]/=abs(a);
+return *this;
 }
 
 
@@ -257,8 +306,4 @@ aux.valor[1]=atan(a.valor[0]-a.valor[1]);
 aux.valor[0]=(aux.valor[0]+aux.valor[1])/2;
 aux.valor[1]=aux.valor[0]-aux.valor[1];
 return aux;
-}
-
-double erro(const medida& a,const medida& b){
-return 100*(a.valor[0]-b.valor[0])/a.valor[0];
 }
