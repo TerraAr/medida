@@ -49,17 +49,17 @@ medida operator-=(const double);
 medida operator*=(const double);
 medida operator/=(const double);
 
-friend medida pow(const medida&,const double);
-friend medida sqrt(const medida&);
-friend medida cbrt(const medida&);
+friend medida pow(const medida,const double);
+friend medida sqrt(const medida);
+friend medida cbrt(const medida);
 
-friend medida sin(const medida&);
-friend medida cos(const medida&);
-friend medida tan(const medida&);
+friend medida sin(const medida);
+friend medida cos(const medida);
+friend medida tan(const medida);
 
-friend medida asin(const medida&);
-friend medida acos(const medida&);
-friend medida atan(const medida&);
+friend medida asin(const medida);
+friend medida acos(const medida);
+friend medida atan(const medida);
 
 medida(const double a=0,const double b=0) : flag(0) {
 valor[0]=a;
@@ -224,7 +224,7 @@ return *this;
 }
 
 
-medida pow(const medida& a,const double x){
+medida pow(const medida a,const double x){
 medida aux;
 aux.valor[0]=pow(a.valor[0]+a.valor[1],x);
 aux.valor[1]=pow(a.valor[0]-a.valor[1],x);
@@ -233,7 +233,7 @@ aux.valor[1]=aux.valor[0]-aux.valor[1];
 return aux;
 }
 
-medida sqrt(const medida& a){
+medida sqrt(const medida a){
 medida aux;
 aux.valor[0]=sqrt(a.valor[0]+a.valor[1]);
 aux.valor[1]=sqrt(a.valor[0]-a.valor[1]);
@@ -242,7 +242,7 @@ aux.valor[1]=aux.valor[0]-aux.valor[1];
 return aux;
 }
 
-medida cbrt(const medida& a){
+medida cbrt(const medida a){
 medida aux;
 aux.valor[0]=cbrt(a.valor[0]+a.valor[1]);
 aux.valor[1]=cbrt(a.valor[0]-a.valor[1]);
@@ -251,21 +251,21 @@ aux.valor[1]=aux.valor[0]-aux.valor[1];
 return aux;
 }
 
-medida sin(const medida& a){
+medida sin(const medida a){
 medida aux;
 aux.valor[0]=sin(a.valor[0]);
 aux.valor[1]=abs(cos(a.valor[1]));
 return aux;
 }
 
-medida cos(const medida& a){
+medida cos(const medida a){
 medida aux;
 aux.valor[0]=cos(a.valor[0]);
 aux.valor[1]=abs(sin(a.valor[1]));
 return aux;
 }
 
-medida tan(const medida& a){
+medida tan(const medida a){
 medida aux;
 aux.valor[0]=tan(a.valor[0]);
 aux.valor[1]=1/cos(a.valor[1]);
@@ -274,7 +274,7 @@ return aux;
 }
 
 
-medida asin(const medida& a){
+medida asin(const medida a){
 medida aux;
 aux.valor[0]=asin(a.valor[0]+a.valor[1]);
 aux.valor[1]=asin(a.valor[0]-a.valor[1]);
@@ -283,7 +283,7 @@ aux.valor[1]=abs(aux.valor[0]-aux.valor[1]);
 return aux;
 }
 
-medida acos(const medida& a){
+medida acos(const medida a){
 medida aux;
 aux.valor[0]=acos(a.valor[0]+a.valor[1]);
 aux.valor[1]=acos(a.valor[0]-a.valor[1]);
@@ -292,7 +292,7 @@ aux.valor[1]=abs(aux.valor[0]-aux.valor[1]);
 return aux;
 }
 
-medida atan(const medida& a){
+medida atan(const medida a){
 medida aux;
 aux.valor[0]=atan(a.valor[0]+a.valor[1]);
 aux.valor[1]=atan(a.valor[0]-a.valor[1]);
