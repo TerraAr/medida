@@ -253,30 +253,23 @@ return aux;
 
 medida sin(const medida& a){
 medida aux;
-aux.valor[0]=(abs(a.valor[0]-PI/2)<a.valor[1])?1:sin(a.valor[0]+a.valor[1]);
-aux.valor[1]=(abs(a.valor[0]+PI/2)<a.valor[1])?-1:sin(a.valor[0]-a.valor[1]);
-aux.valor[0]=(aux.valor[0]+aux.valor[1])/2;
-aux.valor[1]=abs(aux.valor[0]-aux.valor[1]);
+aux.valor[0]=sin(a.valor[0]);
+aux.valor[1]=abs(cos(a.valor[1]));
 return aux;
 }
 
 medida cos(const medida& a){
 medida aux;
-aux.valor[0]=(abs(a.valor[0])<a.valor[1])?1:cos(a.valor[0]+a.valor[1]);
-aux.valor[1]=(abs(a.valor[0]+PI)<a.valor[1])?-1:cos(a.valor[0]-a.valor[1]);
-aux.valor[0]=(aux.valor[0]+aux.valor[1])/2;
-aux.valor[1]=abs(aux.valor[0]-aux.valor[1]);
+aux.valor[0]=cos(a.valor[0]);
+aux.valor[1]=abs(sin(a.valor[1]));
 return aux;
 }
 
 medida tan(const medida& a){
 medida aux;
-if(abs(a.valor[0]-PI/2)<a.valor[1] || abs(a.valor[0]+PI/2)<a.valor[1]) return aux;
-
-aux.valor[0]=tan(a.valor[0]+a.valor[1]);
-aux.valor[1]=tan(a.valor[0]-a.valor[1]);
-aux.valor[0]=(aux.valor[0]+aux.valor[1])/2;
-aux.valor[1]=aux.valor[0]-aux.valor[1];
+aux.valor[0]=tan(a.valor[0]);
+aux.valor[1]=1/cos(a.valor[1]);
+aux.valor[1]*=aux.valor[1];
 return aux;
 }
 
