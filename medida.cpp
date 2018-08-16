@@ -254,22 +254,22 @@ return aux;
 medida sin(const medida a){
 medida aux;
 aux.valor[0]=sin(a.valor[0]);
-aux.valor[1]=abs(cos(a.valor[1]));
+aux.valor[1]=abs(cos(a.valor[0])*a.valor[1]);
 return aux;
 }
 
 medida cos(const medida a){
 medida aux;
 aux.valor[0]=cos(a.valor[0]);
-aux.valor[1]=abs(sin(a.valor[1]));
+aux.valor[1]=abs(sin(a.valor[0])*a.valor[1]);
 return aux;
 }
 
 medida tan(const medida a){
 medida aux;
 aux.valor[0]=tan(a.valor[0]);
-aux.valor[1]=1/cos(a.valor[1]);
-aux.valor[1]*=aux.valor[1];
+aux.valor[1]=1/cos(a.valor[0]);
+aux.valor[1]*=aux.valor[1]*a.valor[1];
 return aux;
 }
 
