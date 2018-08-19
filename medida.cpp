@@ -268,7 +268,7 @@ return aux;
 medida tan(const medida a){
 medida aux;
 aux.valor[0]=tan(a.valor[0]);
-aux.valor[1]=1/cos(a.valor[0]);
+aux.valor[1]=abs(1/cos(a.valor[0]));
 aux.valor[1]*=aux.valor[1]*a.valor[1];
 return aux;
 }
@@ -276,27 +276,21 @@ return aux;
 
 medida asin(const medida a){
 medida aux;
-aux.valor[0]=asin(a.valor[0]+a.valor[1]);
-aux.valor[1]=asin(a.valor[0]-a.valor[1]);
-aux.valor[0]=(aux.valor[0]+aux.valor[1])/2;
-aux.valor[1]=abs(aux.valor[0]-aux.valor[1]);
+aux.valor[0]=asin(a.valor[0]);
+aux.valor[1]=a.valor[1]/sqrt(1-a.valor[0]*a.valor[0]);
 return aux;
 }
 
 medida acos(const medida a){
 medida aux;
-aux.valor[0]=acos(a.valor[0]+a.valor[1]);
-aux.valor[1]=acos(a.valor[0]-a.valor[1]);
-aux.valor[0]=(aux.valor[0]+aux.valor[1])/2;
-aux.valor[1]=abs(aux.valor[0]-aux.valor[1]);
+aux.valor[0]=acos(a.valor[0]);
+aux.valor[1]=a.valor[1]/sqrt(1-a.valor[0]*a.valor[0]);
 return aux;
 }
 
 medida atan(const medida a){
 medida aux;
-aux.valor[0]=atan(a.valor[0]+a.valor[1]);
-aux.valor[1]=atan(a.valor[0]-a.valor[1]);
-aux.valor[0]=(aux.valor[0]+aux.valor[1])/2;
-aux.valor[1]=aux.valor[0]-aux.valor[1];
+aux.valor[0]=atan(a.valor[0]);
+aux.valor[1]=a.valor[1]/(1+a.valor[0]*a.valor[0]);
 return aux;
 }
