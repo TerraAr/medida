@@ -18,8 +18,6 @@ class medida{
 private:
 double valor[2];
 
-bool flag;
-
 public:
 medida operator+(const medida);
 medida operator-(const medida);
@@ -43,7 +41,6 @@ medida operator-=(const medida);
 medida operator*=(const medida);
 medida operator/=(const medida);
 
-medida operator=(const double);
 medida operator+=(const double);
 medida operator-=(const double);
 medida operator*=(const double);
@@ -61,7 +58,7 @@ friend medida asin(const medida);
 friend medida acos(const medida);
 friend medida atan(const medida);
 
-medida(const double a=0,const double b=0) : flag(0) {
+medida(const double a=0,const double b=0){
 valor[0]=a;
 valor[1]=b;
 }
@@ -195,12 +192,6 @@ return *this;
 }
 
 
-medida medida::operator=(const double a){
-valor[flag]=a;
-flag=!flag;
-return *this;
-}
-
 medida medida::operator+=(const double a){
 valor[0]+=a;
 return *this;
@@ -268,7 +259,7 @@ return aux;
 medida tan(const medida a){
 medida aux;
 aux.valor[0]=tan(a.valor[0]);
-aux.valor[1]=abs(1/cos(a.valor[0]));
+aux.valor[1]=1/cos(a.valor[0]);
 aux.valor[1]*=aux.valor[1]*a.valor[1];
 return aux;
 }
