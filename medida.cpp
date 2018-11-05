@@ -23,16 +23,23 @@ medida operator+(const medida);
 medida operator-(const medida);
 medida operator*(const medida);
 medida operator/(const medida);
-double operator%(const medida);
+inline double operator%(const medida);
 
 medida operator+(const double);
 medida operator-(const double);
 medida operator*(const double);
 medida operator/(const double);
-double operator%(const double);
+inline double operator%(const double);
+
+friend medida operator+(const double,const medida);
+friend medida operator-(const double,const medida);
+friend medida operator*(const double,const medida);
+friend medida operator/(const double,const medida);
+friend double operator%(const double,const medida);
 
 medida operator++();
 medida operator--();
+medida operator+();
 medida operator-();
 
 medida operator=(const medida);
@@ -134,10 +141,42 @@ aux.valor[1]=valor[1]/abs(a);
 return aux;
 }
 
-double medida::operator%(const double a){
-double aux;
-aux=100.*(a-valor[0])/a;
+inline double medida::operator%(const double a){
+return 100.F*(a-valor[0])/a;
+}
+
+
+friend medida operator+(const double a,const medida b){
+medida aux;
+aux.valor[0]=a+b.valor[0];
+aux.valor[1]=b.valor[1];
 return aux;
+}
+
+friend medida operator-(const double a,const medida b){
+medida aux;
+aux.valor[0]=a-b.valor[0];
+aux.valor[1]=b.valor[1];
+return aux;
+}
+
+friend medida operator*(const double a,const medida b){
+medida aux;
+aux.valor[0]=a*b.valor[0];
+aux.valor[1]=abs(a)*b.valor[1];
+return aux;
+}
+
+friend medida operator/(const double a,const medida b){
+double constante=a/((b.valor[0]+b.valor[1])*(b.valor[0]+b.valor[1]));
+medida aux;
+aux.valor[0]=constante*b.valor[0];
+aux.valor[1]=abs(constante)*b.valor[1];
+return aux;
+}
+
+friend inline double operator%(const double a,const medida b){
+return 100.F*(a-valor[0])/a;
 }
 
 
@@ -148,6 +187,10 @@ return *this;
 
 medida medida::operator--(){
 valor[0]--;
+return *this;
+}
+
+medida medida::operator-(){
 return *this;
 }
 
