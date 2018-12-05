@@ -54,8 +54,12 @@ medida operator*=(const double);
 medida operator/=(const double);
 
 friend medida pow(const medida,const double);
+friend medida pow(const double,const medida);
 friend medida sqrt(const medida);
 friend medida cbrt(const medida);
+
+friend medida exp(const medida);
+friend medida log(const medida);
 
 friend medida sin(const medida);
 friend medida cos(const medida);
@@ -74,7 +78,7 @@ double medicao() {return *valor;}
 double erro() {return *(valor+1);}
 
 void imprime(){
-printf("%lf±%lf\n",valor[0],valor[1]);
+printf("%lf±%lf",*valor,valor[1]);
 }
 };
 
@@ -267,11 +271,19 @@ aux.valor[1]=aux.valor[0]-aux.valor[1];
 return aux;
 }
 
+medida pow(const double a,const medida x){
+medida aux;
+double aux2=pow(a,x.valor[1]),aux3=pow(a,x.valor[0]);
+aux.valor[0]=aux3*(aux2+1./aux2)/2.;
+aux.valor[1]=aux3*(aux2-1./aux2)/2.;
+return aux;
+}
+
 medida sqrt(const medida a){
 medida aux;
 aux.valor[0]=sqrt(a.valor[0]+a.valor[1]);
 aux.valor[1]=sqrt(a.valor[0]-a.valor[1]);
-aux.valor[0]=(aux.valor[0]+aux.valor[1])/2;
+aux.valor[0]=(aux.valor[0]+aux.valor[1])/2.;
 aux.valor[1]=aux.valor[0]-aux.valor[1];
 return aux;
 }
@@ -280,10 +292,27 @@ medida cbrt(const medida a){
 medida aux;
 aux.valor[0]=cbrt(a.valor[0]+a.valor[1]);
 aux.valor[1]=cbrt(a.valor[0]-a.valor[1]);
-aux.valor[0]=(aux.valor[0]+aux.valor[1])/2;
+aux.valor[0]=(aux.valor[0]+aux.valor[1])/2.;
 aux.valor[1]=aux.valor[0]-aux.valor[1];
 return aux;
 }
+
+
+medida exp(const medida a){
+double aux2=exp(a.valor[0]);
+medida aux(aux2*cosh(a.valor[1],aux2*sinh(a.valor[1])));
+return aux;
+}
+
+medida log(const medida a){
+medida aux;
+aux.valor[0]=log(a.valor[0]+a.valor[1]);
+aux.valor[1]=log(a.valor[0]-a.valor[1]);
+aux.valor[0]=(aux.valor[0]+aux.valor[1])/2.;
+aux.valor[1]=aux.valor[0]-aux.valor[1];
+return aux;
+}
+
 
 medida sin(const medida a){
 medida aux;
