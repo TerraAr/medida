@@ -1,5 +1,5 @@
-#include<math.h>
 #include<stdio.h>
+#include<math.h>
 
 #define PI M_PI
 #define NEPHER M_E
@@ -15,10 +15,9 @@
 inline double abs(double x) {return (x<0)?-(x):x;}
 
 class medida{
-private:
-double valor[2];
-
 public:
+double medicao,erro;
+
 medida operator+(const medida);
 medida operator-(const medida);
 medida operator*(const medida);
@@ -55,6 +54,7 @@ medida operator/=(const double);
 
 friend medida pow(const medida,const double);
 friend medida pow(const double,const medida);
+friend medida pow(const medida,const medida);
 friend medida sqrt(const medida);
 friend medida cbrt(const medida);
 
@@ -70,290 +70,294 @@ friend medida acos(const medida);
 friend medida atan(const medida);
 
 medida(const double a=0,const double b=0){
-valor[0]=a;
-valor[1]=b;
+medicao=a;
+erro=b;
 }
 
-double medicao() {return *valor;}
-double erro() {return *(valor+1);}
-
 void imprime(){
-printf("%lf±%lf",*valor,valor[1]);
+printf("%lf±%lf",medicao,erro);
 }
 };
 
 medida medida::operator+(const medida b){
 medida aux;
-aux.valor[0]=valor[0]+b.valor[0];
-aux.valor[1]=valor[1]+b.valor[1];
+aux.medicao=medicao+b.medicao;
+aux.erro=erro+b.erro;
 return aux;
 }
 
 medida medida::operator-(const medida b){
 medida aux;
-aux.valor[0]=valor[0]-b.valor[0];
-aux.valor[1]=valor[1]+b.valor[1];
+aux.medicao=medicao-b.medicao;
+aux.erro=medicao+b.erro;
 return aux;
 }
 
 medida medida::operator*(const medida b){
 medida aux;
-aux.valor[0]=valor[0]*b.valor[0]+valor[1]*b.valor[1];
-aux.valor[1]=abs(valor[0]*b.valor[1]+valor[1]*b.valor[0]);
+aux.medicao=medicao*b.medicao+erro*b.erro;
+aux.erro=abs(medicao*b.erro+erro*b.medicao);
 return aux;
 }
 
 medida medida::operator/(const medida b){
 medida aux;
-aux.valor[0]=(valor[0]*b.valor[0] + valor[1]*b.valor[1]) / ((b.valor[0]+b.valor[1]) * (b.valor[0]-b.valor[1]));
-aux.valor[1]=abs((valor[0]*b.valor[1] + valor[1]*b.valor[0]) / ((b.valor[0]+b.valor[1]) * (b.valor[0]-b.valor[1])));
+aux.medicao=(medicao*b.medicao + erro*b.erro) / ((b.medicao+b.erro) * (b.medicao-b.erro));
+aux.erro=abs((medicao*b.erro + erro*b.medicao) / ((b.medicao+b.erro) * (b.medicao-b.erro)));
 return aux;
 }
 
-double medida::operator%(const medida b){
-double aux;
-aux=100.*(b.valor[0]-valor[0])/b.valor[0];
-return aux;
+inline double medida::operator%(const medida b){
+return 100.*(b.medicao-medicao)/b.medicao;
 }
 
 
 medida medida::operator+(const double a){
 medida aux;
-aux.valor[0]=valor[0]+a;
-aux.valor[1]=valor[1];
+aux.medicao=medicao+a;
+aux.erro=erro;
 return aux;
 }
 
 medida medida::operator-(const double a){
 medida aux;
-aux.valor[0]=valor[0]-a;
-aux.valor[1]=valor[1];
+aux.medicao=medicao-a;
+aux.erro=erro;
 return aux;
 }
 
 medida medida::operator*(const double a){
 medida aux;
-aux.valor[0]=valor[0]*a;
-aux.valor[1]=valor[1]*abs(a);
+aux.medicao=medicao*a;
+aux.erro=erro*abs(a);
 return aux;
 }
 
 medida medida::operator/(const double a){
 medida aux;
-aux.valor[0]=valor[0]/a;
-aux.valor[1]=valor[1]/abs(a);
+aux.medicao=medicao/a;
+aux.erro=erro/abs(a);
 return aux;
 }
 
 inline double medida::operator%(const double a){
-return 100.F*(a-valor[0])/a;
+return 100.*(a-medicao)/a;
 }
 
 
-friend medida operator+(const double a,const medida b){
+medida operator+(const double a,const medida b){
 medida aux;
-aux.valor[0]=a+b.valor[0];
-aux.valor[1]=b.valor[1];
+aux.medicao=a+b.medicao;
+aux.erro=b.erro;
 return aux;
 }
 
-friend medida operator-(const double a,const medida b){
+medida operator-(const double a,const medida b){
 medida aux;
-aux.valor[0]=a-b.valor[0];
-aux.valor[1]=b.valor[1];
+aux.medicao=a-b.medicao;
+aux.erro=b.erro;
 return aux;
 }
 
-friend medida operator*(const double a,const medida b){
+medida operator*(const double a,const medida b){
 medida aux;
-aux.valor[0]=a*b.valor[0];
-aux.valor[1]=abs(a)*b.valor[1];
+aux.medicao=a*b.medicao;
+aux.erro=abs(a)*b.erro;
 return aux;
 }
 
-friend medida operator/(const double a,const medida b){
-double constante=a/((b.valor[0]+b.valor[1])*(b.valor[0]+b.valor[1]));
+medida operator/(const double a,const medida b){
+double constante=a/((b.medicao+b.erro)*(b.medicao+b.erro));
 medida aux;
-aux.valor[0]=constante*b.valor[0];
-aux.valor[1]=abs(constante)*b.valor[1];
+aux.medicao=constante*b.medicao;
+aux.erro=abs(constante)*b.erro;
 return aux;
 }
 
-friend inline double operator%(const double a,const medida b){
-return 100.F*(a-valor[0])/a;
+inline double operator%(const double a,const medida b){
+return 100.*(b.medicao-a)/b.medicao;
 }
 
 
 medida medida::operator++(){
-valor[0]++;
+medicao++;
 return *this;
 }
 
 medida medida::operator--(){
-valor[0]--;
+medicao--;
 return *this;
 }
 
-medida medida::operator-(){
+medida medida::operator+(){
 return *this;
 }
 
 medida medida::operator-(){
 medida aux;
-aux.valor[0]=-valor[0];
-aux.valor[1]=valor[1];
+aux.medicao=-medicao;
+aux.erro=erro;
 return aux;
 }
 
 
 medida medida::operator=(const medida b){
-valor[0]=b.valor[0];
-valor[1]=b.valor[1];
+medicao=b.medicao;
+erro=b.erro;
 return *this;
 }
 
 medida medida::operator+=(const medida b){
-valor[0]+=b.valor[0];
-valor[1]+=b.valor[1];
+medicao+=b.medicao;
+erro+=b.erro;
 return *this;
 }
 
 medida medida::operator-=(const medida b){
-valor[0]-=b.valor[0];
-valor[1]+=b.valor[1];
+medicao-=b.medicao;
+erro+=b.erro;
 return *this;
 }
 
 medida medida::operator*=(const medida b){
-double c=valor[0]*b.valor[0] + valor[1]*b.valor[1];
-valor[1]=abs(valor[0]*b.valor[1] + valor[1]*b.valor[0]);
-valor[0]=c;
+double c=medicao*b.medicao + erro*b.erro;
+erro=abs(medicao*b.erro + erro*b.medicao);
+medicao=c;
 return *this;
 }
 
 medida medida::operator/=(const medida b){
-double c=(valor[0]*b.valor[0] + valor[1]*b.valor[1]) / ((b.valor[0]+b.valor[1]) * (b.valor[0]-b.valor[1]));
-valor[1]=abs((valor[0]*b.valor[1] + valor[1]*b.valor[0]) / ((b.valor[0]+b.valor[1]) * (b.valor[0]-b.valor[1])));
-valor[0]=c;
+double c=(medicao*b.medicao + erro*b.erro) / ((b.medicao+b.erro) * (b.medicao-b.erro));
+erro=abs((medicao*b.erro + erro*b.medicao) / ((b.medicao+b.erro) * (b.medicao-b.erro)));
+medicao=c;
 return *this;
 }
 
 
 medida medida::operator+=(const double a){
-valor[0]+=a;
+medicao+=a;
 return *this;
 }
 
 medida medida::operator-=(const double a){
-valor[0]-=a;
+medicao-=a;
 return *this;
 }
 
 medida medida::operator*=(const double a){
-valor[0]*=a;
-valor[1]*=abs(a);
+medicao*=a;
+erro*=abs(a);
 return *this;
 }
 
 medida medida::operator/=(const double a){
-valor[0]/=a;
-valor[1]/=abs(a);
+medicao/=a;
+erro/=abs(a);
 return *this;
 }
 
 
 medida pow(const medida a,const double x){
 medida aux;
-aux.valor[0]=pow(a.valor[0]+a.valor[1],x);
-aux.valor[1]=pow(a.valor[0]-a.valor[1],x);
-aux.valor[0]=(aux.valor[0]+aux.valor[1])/2;
-aux.valor[1]=aux.valor[0]-aux.valor[1];
+aux.medicao=pow(a.medicao+a.erro,x);
+aux.erro=pow(a.medicao-a.erro,x);
+aux.medicao=(aux.medicao+aux.erro)/2;
+aux.erro=aux.medicao-aux.erro;
 return aux;
 }
 
 medida pow(const double a,const medida x){
 medida aux;
-double aux2=pow(a,x.valor[1]),aux3=pow(a,x.valor[0]);
-aux.valor[0]=aux3*(aux2+1./aux2)/2.;
-aux.valor[1]=aux3*(aux2-1./aux2)/2.;
+double aux2=pow(a,x.erro),aux3=pow(a,x.medicao);
+aux.medicao=aux3*(aux2+1./aux2)/2.;
+aux.erro=aux3*(aux2-1./aux2)/2.;
+return aux;
+}
+
+medida pow(const medida a,const medida x){
+medida aux;
+aux.medicao=pow(a.medicao+a.erro,x.medicao+x.erro);
+aux.erro=pow(a.medicao-a.erro,x.medicao-x.erro);
+aux.medicao=(aux.medicao+aux.erro)/2.;
+aux.erro=aux.medicao-aux.erro;
 return aux;
 }
 
 medida sqrt(const medida a){
 medida aux;
-aux.valor[0]=sqrt(a.valor[0]+a.valor[1]);
-aux.valor[1]=sqrt(a.valor[0]-a.valor[1]);
-aux.valor[0]=(aux.valor[0]+aux.valor[1])/2.;
-aux.valor[1]=aux.valor[0]-aux.valor[1];
+aux.medicao=sqrt(a.medicao+a.erro);
+aux.erro=sqrt(a.medicao-a.erro);
+aux.medicao=(aux.medicao+aux.erro)/2.;
+aux.erro=aux.medicao-aux.erro;
 return aux;
 }
 
 medida cbrt(const medida a){
 medida aux;
-aux.valor[0]=cbrt(a.valor[0]+a.valor[1]);
-aux.valor[1]=cbrt(a.valor[0]-a.valor[1]);
-aux.valor[0]=(aux.valor[0]+aux.valor[1])/2.;
-aux.valor[1]=aux.valor[0]-aux.valor[1];
+aux.medicao=cbrt(a.medicao+a.erro);
+aux.erro=cbrt(a.medicao-a.erro);
+aux.medicao=(aux.medicao+aux.erro)/2.;
+aux.erro=aux.medicao-aux.erro;
 return aux;
 }
 
 
 medida exp(const medida a){
-double aux2=exp(a.valor[0]);
-medida aux(aux2*cosh(a.valor[1],aux2*sinh(a.valor[1])));
+double aux2=exp(a.medicao);
+medida aux(aux2*cosh(a.erro),aux2*sinh(a.erro));
 return aux;
 }
 
 medida log(const medida a){
 medida aux;
-aux.valor[0]=log(a.valor[0]+a.valor[1]);
-aux.valor[1]=log(a.valor[0]-a.valor[1]);
-aux.valor[0]=(aux.valor[0]+aux.valor[1])/2.;
-aux.valor[1]=aux.valor[0]-aux.valor[1];
+aux.medicao=log(a.medicao+a.erro);
+aux.erro=log(a.medicao-a.erro);
+aux.medicao=(aux.medicao+aux.erro)/2.;
+aux.erro=aux.medicao-aux.erro;
 return aux;
 }
 
 
 medida sin(const medida a){
 medida aux;
-aux.valor[0]=sin(a.valor[0]);
-aux.valor[1]=abs(cos(a.valor[0])*a.valor[1]);
+aux.medicao=sin(a.medicao);
+aux.erro=abs(cos(a.medicao)*a.erro);
 return aux;
 }
 
 medida cos(const medida a){
 medida aux;
-aux.valor[0]=cos(a.valor[0]);
-aux.valor[1]=abs(sin(a.valor[0])*a.valor[1]);
+aux.medicao=cos(a.medicao);
+aux.erro=abs(sin(a.medicao)*a.erro);
 return aux;
 }
 
 medida tan(const medida a){
 medida aux;
-aux.valor[0]=tan(a.valor[0]);
-aux.valor[1]=1/cos(a.valor[0]);
-aux.valor[1]*=aux.valor[1]*a.valor[1];
+aux.medicao=tan(a.medicao);
+aux.erro=1./cos(a.medicao);
+aux.erro*=aux.erro*a.erro;
 return aux;
 }
 
 
 medida asin(const medida a){
 medida aux;
-aux.valor[0]=asin(a.valor[0]);
-aux.valor[1]=a.valor[1]/sqrt(1-a.valor[0]*a.valor[0]);
+aux.medicao=asin(a.medicao);
+aux.erro=a.erro/sqrt(1.-a.medicao*a.medicao);
 return aux;
 }
 
 medida acos(const medida a){
 medida aux;
-aux.valor[0]=acos(a.valor[0]);
-aux.valor[1]=a.valor[1]/sqrt(1-a.valor[0]*a.valor[0]);
+aux.medicao=acos(a.medicao);
+aux.erro=a.erro/sqrt(1.-a.medicao*a.medicao);
 return aux;
 }
 
 medida atan(const medida a){
 medida aux;
-aux.valor[0]=atan(a.valor[0]);
-aux.valor[1]=a.valor[1]/(1+a.valor[0]*a.valor[0]);
+aux.medicao=atan(a.medicao);
+aux.erro=a.erro/(1.+a.medicao*a.medicao);
 return aux;
 }
