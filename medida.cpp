@@ -74,37 +74,28 @@ medicao=a;
 erro=b;
 }
 
-void imprime(){
-printf("%lf±%lf",medicao,erro);
+void imprime(FILE *fp=stdout){
+fprintf(fp,"(%lf±%lf)",medicao,erro);
 }
 };
 
+
+
 medida medida::operator+(const medida b){
-medida aux;
-aux.medicao=medicao+b.medicao;
-aux.erro=erro+b.erro;
-return aux;
+return medida(medicao+b.medicao, erro+b.erro);
 }
 
 medida medida::operator-(const medida b){
-medida aux;
-aux.medicao=medicao-b.medicao;
-aux.erro=medicao+b.erro;
-return aux;
+return medida(medicao-b.medicao, erro+b.erro);
 }
 
 medida medida::operator*(const medida b){
-medida aux;
-aux.medicao=medicao*b.medicao+erro*b.erro;
-aux.erro=abs(medicao*b.erro+erro*b.medicao);
-return aux;
+return medida(medicao*b.medicao+erro*b.erro, abs(medicao*b.erro+erro*b.medicao));
 }
 
 medida medida::operator/(const medida b){
-medida aux;
-aux.medicao=(medicao*b.medicao + erro*b.erro) / ((b.medicao+b.erro) * (b.medicao-b.erro));
-aux.erro=abs((medicao*b.erro + erro*b.medicao) / ((b.medicao+b.erro) * (b.medicao-b.erro)));
-return aux;
+return medida((medicao*b.medicao + erro*b.erro) / ((b.medicao+b.erro) * (b.medicao-b.erro)),
+abs((medicao*b.erro + erro*b.medicao) / ((b.medicao+b.erro) * (b.medicao-b.erro))));
 }
 
 inline double medida::operator%(const medida b){
@@ -113,31 +104,19 @@ return 100.*(b.medicao-medicao)/b.medicao;
 
 
 medida medida::operator+(const double a){
-medida aux;
-aux.medicao=medicao+a;
-aux.erro=erro;
-return aux;
+return medida(medicao+a, erro);
 }
 
 medida medida::operator-(const double a){
-medida aux;
-aux.medicao=medicao-a;
-aux.erro=erro;
-return aux;
+return medida(medicao-a, erro);
 }
 
 medida medida::operator*(const double a){
-medida aux;
-aux.medicao=medicao*a;
-aux.erro=erro*abs(a);
-return aux;
+return medida(medicao*a, erro*abs(a));
 }
 
 medida medida::operator/(const double a){
-medida aux;
-aux.medicao=medicao/a;
-aux.erro=erro/abs(a);
-return aux;
+return medida(medicao/a, erro/abs(a));
 }
 
 inline double medida::operator%(const double a){
@@ -146,32 +125,20 @@ return 100.*(a-medicao)/a;
 
 
 medida operator+(const double a,const medida b){
-medida aux;
-aux.medicao=a+b.medicao;
-aux.erro=b.erro;
-return aux;
+return medida(a+b.medicao, b.erro);
 }
 
 medida operator-(const double a,const medida b){
-medida aux;
-aux.medicao=a-b.medicao;
-aux.erro=b.erro;
-return aux;
+return medida(a-b.medicao, b.erro);
 }
 
 medida operator*(const double a,const medida b){
-medida aux;
-aux.medicao=a*b.medicao;
-aux.erro=abs(a)*b.erro;
-return aux;
+return medida(a*b.medicao, abs(a)*b.erro);
 }
 
 medida operator/(const double a,const medida b){
 double constante=a/((b.medicao+b.erro)*(b.medicao+b.erro));
-medida aux;
-aux.medicao=constante*b.medicao;
-aux.erro=abs(constante)*b.erro;
-return aux;
+return medida(constante*b.medicao, abs(constante)*b.erro);
 }
 
 inline double operator%(const double a,const medida b){
@@ -194,10 +161,7 @@ return *this;
 }
 
 medida medida::operator-(){
-medida aux;
-aux.medicao=-medicao;
-aux.erro=erro;
-return aux;
+return medida(-medicao,erro);
 }
 
 
@@ -267,11 +231,8 @@ return aux;
 }
 
 medida pow(const double a,const medida x){
-medida aux;
 double aux2=pow(a,x.erro),aux3=pow(a,x.medicao);
-aux.medicao=aux3*(aux2+1./aux2)/2.;
-aux.erro=aux3*(aux2-1./aux2)/2.;
-return aux;
+return medida(aux3*(aux2+1./aux2)/2., aux3*(aux2-1./aux2)/2.);
 }
 
 medida pow(const medida a,const medida x){
@@ -304,8 +265,7 @@ return aux;
 
 medida exp(const medida a){
 double aux2=exp(a.medicao);
-medida aux(aux2*cosh(a.erro),aux2*sinh(a.erro));
-return aux;
+return medida(aux2*cosh(a.erro),aux2*sinh(a.erro));
 }
 
 medida log(const medida a){
@@ -319,17 +279,11 @@ return aux;
 
 
 medida sin(const medida a){
-medida aux;
-aux.medicao=sin(a.medicao);
-aux.erro=abs(cos(a.medicao)*a.erro);
-return aux;
+return medida(sin(a.medicao), abs(cos(a.medicao)*a.erro));
 }
 
 medida cos(const medida a){
-medida aux;
-aux.medicao=cos(a.medicao);
-aux.erro=abs(sin(a.medicao)*a.erro);
-return aux;
+return medida(cos(a.medicao), abs(sin(a.medicao)*a.erro));
 }
 
 medida tan(const medida a){
@@ -342,22 +296,16 @@ return aux;
 
 
 medida asin(const medida a){
-medida aux;
-aux.medicao=asin(a.medicao);
-aux.erro=a.erro/sqrt(1.-a.medicao*a.medicao);
-return aux;
+return medida(asin(a.medicao), a.erro/sqrt(1.-a.medicao*a.medicao));
 }
 
 medida acos(const medida a){
-medida aux;
-aux.medicao=acos(a.medicao);
-aux.erro=a.erro/sqrt(1.-a.medicao*a.medicao);
-return aux;
+return medida(acos(a.medicao), a.erro/sqrt(1.-a.medicao*a.medicao));
 }
 
 medida atan(const medida a){
-medida aux;
-aux.medicao=atan(a.medicao);
-aux.erro=a.erro/(1.+a.medicao*a.medicao);
-return aux;
+return medida(atan(a.medicao), a.erro/(1.+a.medicao*a.medicao));
 }
+
+#undef PI
+#undef NEPHER
