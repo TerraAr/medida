@@ -22,22 +22,29 @@ class medida{
 	medida operator-(const medida);
 	medida operator*(const medida);
 	medida operator/(const medida);
-	inline double operator%(const medida);
+	inline double operator%(const medida)
+		__attribute__((always_inline));
 
-	medida operator+(const double);
-	medida operator-(const double);
+	inline medida operator+(const double)
+		__attribute__((always_inline));
+	inline medida operator-(const double)
+		__attribute__((always_inline));
 	medida operator*(const double);
 	medida operator/(const double);
-	inline double operator%(const double);
+	inline double operator%(const double)
+		__attribute__((always_inline));
 
 	friend medida operator+(const double, const medida);
 	friend medida operator-(const double, const medida);
 	friend medida operator*(const double, const medida);
 	friend medida operator/(const double, const medida);
-	friend double operator%(const double, const medida);
+	friend inline double operator%(const double, const medida)
+		__attribute__((always_inline));
 
-	medida operator+();
-	medida operator-();
+	inline medida operator+()
+		__attribute__((const)) __attribute__((always_inline));
+	inline medida operator-()
+		__attribute__((const)) __attribute__((always_inline));
 	medida operator++();
 	medida operator--();
 
@@ -52,22 +59,35 @@ class medida{
 	medida operator*=(const double);
 	medida operator/=(const double);
 
-	friend medida pow(const medida, const double);
-	friend medida pow(const double, const medida);
-	friend medida pow(const medida, const medida);
-	friend medida sqrt(const medida);
-	friend medida cbrt(const medida);
+	friend medida pow(const medida, const double)
+		__attribute__((const));
+	friend medida pow(const double, const medida)
+		__attribute__((const));
+	friend medida pow(const medida, const medida)
+		__attribute__((const));
+	friend medida sqrt(const medida)
+		__attribute__((const));
+	friend medida cbrt(const medida)
+		__attribute__((const));
 
-	friend medida exp(const medida);
-	friend medida log(const medida);
+	friend medida exp(const medida)
+		__attribute__((const));
+	friend medida log(const medida)
+		__attribute__((const));
 
-	friend medida sin(const medida);
-	friend medida cos(const medida);
-	friend medida tan(const medida);
+	friend medida sin(const medida)
+		__attribute__((const));
+	friend medida cos(const medida)
+		__attribute__((const));
+	friend medida tan(const medida)
+		__attribute__((const));
 
-	friend medida asin(const medida);
-	friend medida acos(const medida);
-	friend medida atan(const medida);
+	friend medida asin(const medida)
+		__attribute__((const));
+	friend medida acos(const medida)
+		__attribute__((const));
+	friend medida atan(const medida)
+		__attribute__((const));
 
 	medida(const double a = 0,const double b = 0){
 		medicao = a;
