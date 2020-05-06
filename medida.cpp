@@ -89,15 +89,15 @@ medida medida::operator-(const medida b){
 	return medida(medicao - b.medicao, erro + b.erro);
 }
 
-/* (a±b) * (c±d) = (ac+bd) ± (ad+bc) */
+/* (a±b) * (c±d) = (ac+bd) ± |ad+bc| */
 medida medida::operator*(const medida b){
 	return medida(medicao * b.medicao + erro * b.erro,
 		abs(medicao * b.erro + erro * b.medicao));
 }
 
-/*  a±b     ac+bd    | ad+bc |      1    [ (ac+bd) ± |ad+cb| ] *
- * ----- = ------- ± |-------| = -------                       *
- *  c±d     c²-d²    | c²-d² |    c²-d²                        */
+/*  a±b     ac+bd    | ad+bc |      1   (ac+bd)   |   1   (ad+bc)| *
+ * ----- = ------- ± |-------| = -------        ± |-------       | *
+ *  c±d     c²-d²    | c²-d² |    c²-d²           | c²-d²        | */
 medida medida::operator/(const medida b){
 	return medida((medicao*b.medicao + erro*b.erro) /
 		((b.medicao+b.erro) * (b.medicao-b.erro)),
@@ -205,7 +205,7 @@ medida medida::operator-=(const medida b){
 	return *this;
 }
 
-/* (a±b) * (c±d) = (ac+bd) ± (ad+bc) */
+/* (a±b) * (c±d) = (ac+bd) ± |ad+bc| */
 medida medida::operator*=(const medida b){
 	double c = medicao * b.medicao + erro * b.erro;
 	erro = abs(medicao*b.erro + erro*b.medicao);
@@ -213,14 +213,13 @@ medida medida::operator*=(const medida b){
 	return *this;
 }
 
-/*  a±b     ac+bd    | ad+bc |      1    [ (ac+bd) ± |ad+cb| ] *
- * ----- = ------- ± |-------| = -------                       *
- *  c±d     c²-d²    | c²-d² |    c²-d²                        */
+/*  a±b     ac+bd    | ad+bc |      1   (ac+bd)   |   1   (ad+bc)| *
+ * ----- = ------- ± |-------| = -------        ± |-------       | *
+ *  c±d     c²-d²    | c²-d² |    c²-d²           | c²-d²        | */
 medida medida::operator/=(const medida b){
-	double c = (medicao*b.medicao + erro*b.erro) /
-		   ((b.medicao + b.erro) * (b.medicao - b.erro));
-	erro = abs((medicao*b.erro + erro*b.medicao) /
-		((b.medicao+b.erro) * (b.medicao-b.erro)));
+	double constante = 1. / (b.medicao*b.medicao - b.erro*b.erro);
+	double c = constante * (medicao * b.medicao + erro * b.erro);
+	erro = abs(constante * (medicao * b.erro + erro * b.medicao));
 	medicao = c;
 	return *this;
 }
