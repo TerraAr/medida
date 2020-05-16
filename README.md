@@ -5,9 +5,10 @@
 
 ## Operadores
 
-  Foram construídos todos os operadores binários para os quais foram
-  encontrados significado, tais como + (adição), - (subtração),
-  \* (multiplicação), / (divisão) e % (erro).
+  Foram construídos todos os operadores binários e unários para os
+  quais foram encontrados significado, tais como + (adição),
+  \- (subtração), \* (multiplicação), / (divisão), % (erro), ++
+  (soma 1) e -- (subtrai 1).
 
  - \+
 
