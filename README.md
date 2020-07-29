@@ -1,14 +1,14 @@
 # medida
  Protótipo de biblioteca para operação com medidas reais (com erro).
- Atualmente abrange as operações básicas (+, -, \*, / e %), potenciação,
- radiciação e as trigonométricas.
+ Atualmente abrange as operações básicas (+, \-, \*, / e %), potenciação,
+ radiciação e as trigonométricas.  
 
 ## Operadores
 
   Foram construídos todos os operadores binários e unários para os
   quais foram encontrados significado, tais como + (adição),
   \- (subtração), \* (multiplicação), / (divisão), % (erro), ++
-  (soma 1) e -- (subtrai 1).
+  (soma 1) e \-\- (subtrai 1).  
 
  - \+
 
@@ -47,7 +47,7 @@
   Máximo para as sobrecargas das funções
   trigonométricas, tanto as diretas quanto as
   inversas, e trabalhou-se com o desenvolvimento
-  pela faixa de erro\* para as demais.
+  pela faixa de erro\* para as demais.  
 
  - pow(medida, medida)
 
@@ -77,7 +77,7 @@
 
  \* Desenvolvimento pela faixa de erro: f(x±dx) = (MAX + MIN)/2 ± (MAX - MIN)/2
  com as possíveis simplificações para cada função, de acordo com suas
- propriedades.
+ propriedades.  
 
 ---
 
@@ -86,4 +86,4 @@
  - imprime(FILE\*)
   Função que faz a saída da variável no formato (medicao±erro) através do
   ponteiro especificado. Caso não seja enviado ponteiro, a saída é feita
-  pelo *stdout*.
+  pelo *stdout*.  
