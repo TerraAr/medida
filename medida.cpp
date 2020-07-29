@@ -12,19 +12,22 @@
 #define acsc(x) asin(1/x)
 #define acot(x) atan(1/x)
 
+/* Função absoluto para doubles */
 inline double abs(double x) { return (x<0)?-(x):x; }
 
 class medida{
 	public:
 	double medicao, erro;
 
-	medida operator+(const medida);
-	medida operator-(const medida);
-	medida operator*(const medida);
-	medida operator/(const medida);
+	/* Operadores aritméticos básicos com outro membro da mesma classe */
+	medida operator+(const medida) __attribute__((const));
+	medida operator-(const medida) __attribute__((const));
+	medida operator*(const medida) __attribute__((const));
+	medida operator/(const medida) __attribute__((const));
 	inline double operator%(const medida)
 		__attribute__((always_inline));
 
+	/* Operadores aritméticos básicos com números exatos à direita */
 	inline medida operator+(const double)
 		__attribute__((always_inline));
 	inline medida operator-(const double)
@@ -34,31 +37,40 @@ class medida{
 	inline double operator%(const double)
 		__attribute__((always_inline));
 
-	friend medida operator+(const double, const medida);
-	friend medida operator-(const double, const medida);
-	friend medida operator*(const double, const medida);
-	friend medida operator/(const double, const medida);
+	/* Operadores aritméticos básicos com números exatos à esquerda */
+	friend medida operator+(const double, const medida)
+		__attribute__((const));
+	friend medida operator-(const double, const medida)
+		__attribute__((const));
+	friend medida operator*(const double, const medida)
+		__attribute__((const));
+	friend medida operator/(const double, const medida)
+		__attribute__((const));
 	friend inline double operator%(const double, const medida)
 		__attribute__((always_inline));
 
+	/* Operadores unários */
 	inline medida operator+()
 		__attribute__((const)) __attribute__((always_inline));
 	inline medida operator-()
 		__attribute__((const)) __attribute__((always_inline));
-	medida operator++();
-	medida operator--();
+	inline medida operator++() __attribute__((always_inline));
+	inline medida operator--() __attribute__((always_inline));
 
+	/* Operadores de atribuição com outros membros da mesma classe */
 	medida operator=(const medida);
 	medida operator+=(const medida);
 	medida operator-=(const medida);
 	medida operator*=(const medida);
 	medida operator/=(const medida);
 
+	/* Operadores de atribuição com números exatos */
 	medida operator+=(const double);
 	medida operator-=(const double);
 	medida operator*=(const double);
 	medida operator/=(const double);
 
+	/* Funções de exponenciação e radiciação */
 	friend medida pow(const medida, const double)
 		__attribute__((const));
 	friend medida pow(const double, const medida)
@@ -70,11 +82,13 @@ class medida{
 	friend medida cbrt(const medida)
 		__attribute__((const));
 
+	/* Exponenciação e logaritmo */
 	friend medida exp(const medida)
 		__attribute__((const));
 	friend medida log(const medida)
 		__attribute__((const));
 
+	/* Funções trigonométricas diretas */
 	friend medida sin(const medida)
 		__attribute__((const));
 	friend medida cos(const medida)
@@ -82,6 +96,7 @@ class medida{
 	friend medida tan(const medida)
 		__attribute__((const));
 
+	/* Funções trigonométricas inversas */
 	friend medida asin(const medida)
 		__attribute__((const));
 	friend medida acos(const medida)
@@ -89,12 +104,14 @@ class medida{
 	friend medida atan(const medida)
 		__attribute__((const));
 
-	medida(const double a = 0,const double b = 0){
+	/* Constructor */
+	medida(const double a = 0.,const double b = 0.){
 		medicao = a;
 		erro = b;
 	}
 
-	void imprime(FILE *fp=stdout){
+	/* Função de saída */
+	void imprime(FILE *fp = stdout){
 		fprintf(fp,"(%lf ± %lf)", medicao, erro);
 	}
 };
