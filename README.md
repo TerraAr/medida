@@ -81,13 +81,10 @@
 
 ---
 
-## Funções de entrada
-
----
-
 ## Funções de saída
 
  - `imprime(FILE*)`
+
   Função que faz a saída da variável no formato `(medicao±erro)` através
   do ponteiro especificado. Caso não seja enviado ponteiro, a saída é
   feita pelo `stdout`.  
