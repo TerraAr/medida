@@ -366,11 +366,13 @@ medida tan(const medida a){
 
 
 medida asin(const medida a){
-	return medida(asin(a.medicao), a.erro / sqrt(1.-a.medicao * a.medicao));
+	return medida(asin(a.medicao), a.erro /
+		sqrt(1. - a.medicao * a.medicao));
 }
 
 medida acos(const medida a){
-	return medida(acos(a.medicao), a.erro / sqrt(1.-a.medicao * a.medicao));
+	return medida(acos(a.medicao), a.erro /
+		sqrt(1. - a.medicao * a.medicao));
 }
 
 medida atan(const medida a){
