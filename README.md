@@ -15,12 +15,14 @@
  Desvio Máximo para as demais.  
 
  **Teoria do Desvio Padrão**
+
  Toma-se a série de Taylor da função e trunca-se
  no *n*-ésimo termo da série, de modo que temos
  o resultado da operação sendo f(a±b) = f(a) ±
  f'(a) \* b + (1/2)f''(a) \* b ^ 2.
 
  **Teoria do Desvio Máximo**
+
  Toma-se os extremos que o resultado da operação
  pode tomar, sendo o resultado a média dos dois
  valores e o erro d diferença entre os extremos

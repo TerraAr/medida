@@ -251,10 +251,10 @@ medicao log(const medicao a){
 	return aux;
 }
 
-/* sin(a±b) = sin(a) ± |cos(a) * b - (1/2)sin(a) * b^2| */
+/* sin(a±b) = sin(a) ± |cos(a)| * b ± (1/2)|sin(a)| * b^2 */
 medicao sin(const medicao a){
 	double medida = sin(a.medida);
-	double erro = abs((cos(a.medida) - medida * a.erro / 2.) * a.erro);
+	double erro = (abs(cos(a.medida)) - abs(medida) * a.erro / 2.) * a.erro;
 
 	if(medida + erro >= 1. && medida - erro <= -1.)
 		return medicao(0., 1.);
@@ -268,10 +268,10 @@ medicao sin(const medicao a){
 	return medicao(medida, erro);
 }
 
-/* cos(a±b) = cos(a) ± |-sin(a) * b - (1/2)cos(a) * b^2| */
+/* cos(a±b) = cos(a) ± |sin(a)| * b ± (1/2)|cos(a)| * b^2 */
 medicao cos(const medicao a){
 	double medida = cos(a.medida);
-	double erro = abs((sin(a.medida) + medida * a.erro / 2.) * a.erro);
+	double erro = (abs(sin(a.medida)) + abs(medida) * a.erro / 2.) * a.erro;
 
 	if(medida + erro >= 1. && medida - erro <= -1.)
 		return medicao(0., 1.);
@@ -285,44 +285,44 @@ medicao cos(const medicao a){
 	return medicao(medida, erro);
 }
 
-/* tan(a±b) = tan(a) ± |sec^2(a) * b + (1/2)tg(a)sec^2(x) * b^2| */
+/* tan(a±b) = tan(a) ± sec^2(a) * b ± (1/2)sec^2(x)|tg(a)| * b^2 */
 medicao tan(const medicao a){
 	medicao aux;
 	aux.medida = tan(a.medida);
 	aux.erro = 1. / cos(a.medida);	// aux.erro = sec(a)
-	aux.erro *= aux.erro * (1 + tan(a.medida) * a.erro / 2.) * a.erro;
+	aux.erro *= aux.erro * (1 + abs(tan(a.medida)) * a.erro / 2.) * a.erro;
 	return aux;
 }
 
 /* arcsen(a±b) = arcsen(a) ±
- * |(1/sqrt(1 - a^2)) * b + a/2(sqrt((1 - a^2))^3) * b^2| =
- * arcsen(a) ± |(b/sqrt(1 - a^2)) (1 + ab/2(1 - a^2))| */
+ * (1/sqrt(1 - a^2)) * b ± |a/2(sqrt((1 - a^2))^3)| * b^2 =
+ * arcsen(a) ± (b/sqrt(1 - a^2)) (1 + |a|b/2(1 - a^2)) */
 medicao asin(const medicao a){
 	double medida_2 = a.medida * a.medida;
 	double erro = a.erro/sqrt(1. - medida_2);
-	erro *= 1. + a.medida * a.erro / (2. - 2. * medida_2);
+	erro *= 1. + abs(a.medida) * a.erro / (2. - 2. * medida_2);
 
 	return medicao(asin(a.medida), erro);
 }
 
 /* arccos(a±b) = arccos(a) ±
- * |-(1/sqrt(1 - a^2)) * b - a/2(sqrt((1 - a^2))^3) * b^2| =
- * arccos(a) ± |(b/sqrt(1 - a^2)) (1 + ab/2(1 - a^2))| */
+ * |-(1/sqrt(1 - a^2)) * b| ± |a/2(sqrt((1 - a^2))^3) * b^2| =
+ * arccos(a) ± (b/sqrt(1 - a^2)) (1 + |a|b/2(1 - a^2)) */
 medicao acos(const medicao a){
 	double medida_2 = a.medida * a.medida;
 	double erro = a.erro/sqrt(1. - medida_2);
-	erro *= 1. + a.medida * a.erro / (2. - 2. * medida_2);
+	erro *= 1. + abs(a.medida) * a.erro / (2. - 2. * medida_2);
 
 	return medicao(acos(a.medida), erro);
 }
 
 /* arctg(a±b) = arctg(a) ±
- * |(1/(1 + a^2)) * b - (a/(1 + a^2)^2) * b^2| =
- * arctg(a) ± |(b/(1 + a^2)) * (1 - ab/(1 + a^2))| */
+ * |(1/(1 + a^2))| * b ± |(a/(1 + a^2)^2)| * b^2 =
+ * arctg(a) ± (b/(1 + a^2)) * (1 + |a|b/(1 + a^2)) */
 medicao atan(const medicao a){
 	double medida_2 = a.medida * a.medida;
 	double erro = a.erro / (1. + medida_2);
-	erro *= 1. - a.medida * a.erro / (1. + medida_2);
+	erro *= 1. + abs(a.medida) * a.erro / (1. + medida_2);
 
 	return medicao(atan(a.medida), erro);
 }
