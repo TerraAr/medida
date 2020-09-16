@@ -1,4 +1,4 @@
-/* Copyright (C) 2019 - 2020 Fernando José Carames Vecino 
+/* Copyright (C) 2018 - 2020 Fernando José Carames Vecino 
  * (fernando.carames@gmail.com).
  ************************************************************************
  *
