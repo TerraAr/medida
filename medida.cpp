@@ -1,282 +1,185 @@
-#include<stdio.h>
+#ifndef MEDIDA_C
+#define MEDIDA_C
+
+#include"medida.h"
 #include<math.h>
-
-#define PI M_PI
-#define NEPHER M_E
-
-#define sec(x) 1/cos(x)
-#define csc(x) 1/sin(x)
-#define cot(x) 1/tan(x)
-
-#define asec(x) acos(1/x)
-#define acsc(x) asin(1/x)
-#define acot(x) atan(1/x)
 
 /* Função absoluto para doubles */
 inline double abs(double x) { return (x<0)?-(x):x; }
 
-class medida{
-	public:
-	double medicao, erro;
+medicao::medicao() : medida(0.), erro(0.){}
 
-	/* Operadores aritméticos básicos com outro membro da mesma classe */
-	medida operator+(const medida) __attribute__((const));
-	medida operator-(const medida) __attribute__((const));
-	medida operator*(const medida) __attribute__((const));
-	medida operator/(const medida) __attribute__((const));
-	inline double operator%(const medida)
-		__attribute__((always_inline));
+medicao::medicao(const double a, const double b) : medida(a), erro(b){}
 
-	/* Operadores aritméticos básicos com números exatos à direita */
-	inline medida operator+(const double)
-		__attribute__((always_inline));
-	inline medida operator-(const double)
-		__attribute__((always_inline));
-	medida operator*(const double);
-	medida operator/(const double);
-	inline double operator%(const double)
-		__attribute__((always_inline));
+double medicao::media(){
+	return medida;
+}
 
-	/* Operadores aritméticos básicos com números exatos à esquerda */
-	friend medida operator+(const double, const medida)
-		__attribute__((const));
-	friend medida operator-(const double, const medida)
-		__attribute__((const));
-	friend medida operator*(const double, const medida)
-		__attribute__((const));
-	friend medida operator/(const double, const medida)
-		__attribute__((const));
-	friend inline double operator%(const double, const medida)
-		__attribute__((always_inline));
-
-	/* Operadores unários */
-	inline medida operator+()
-		__attribute__((const)) __attribute__((always_inline));
-	inline medida operator-()
-		__attribute__((const)) __attribute__((always_inline));
-	inline medida operator++() __attribute__((always_inline));
-	inline medida operator--() __attribute__((always_inline));
-
-	/* Operadores de atribuição com outros membros da mesma classe */
-	medida operator=(const medida);
-	medida operator+=(const medida);
-	medida operator-=(const medida);
-	medida operator*=(const medida);
-	medida operator/=(const medida);
-
-	/* Operadores de atribuição com números exatos */
-	medida operator+=(const double);
-	medida operator-=(const double);
-	medida operator*=(const double);
-	medida operator/=(const double);
-
-	/* Funções de exponenciação e radiciação */
-	friend medida pow(const medida, const double)
-		__attribute__((const));
-	friend medida pow(const double, const medida)
-		__attribute__((const));
-	friend medida pow(const medida, const medida)
-		__attribute__((const));
-	friend medida sqrt(const medida)
-		__attribute__((const));
-	friend medida cbrt(const medida)
-		__attribute__((const));
-
-	/* Exponenciação e logaritmo */
-	friend medida exp(const medida)
-		__attribute__((const));
-	friend medida log(const medida)
-		__attribute__((const));
-
-	/* Funções trigonométricas diretas */
-	friend medida sin(const medida)
-		__attribute__((const));
-	friend medida cos(const medida)
-		__attribute__((const));
-	friend medida tan(const medida)
-		__attribute__((const));
-
-	/* Funções trigonométricas inversas */
-	friend medida asin(const medida)
-		__attribute__((const));
-	friend medida acos(const medida)
-		__attribute__((const));
-	friend medida atan(const medida)
-		__attribute__((const));
-
-	/* Constructor */
-	medida(const double a = 0.,const double b = 0.){
-		medicao = a;
-		erro = b;
-	}
-
-	/* Função de saída */
-	void imprime(FILE *fp = stdout){
-		fprintf(fp,"(%lf ± %lf)", medicao, erro);
-	}
-};
+double medicao::erro_associado(){
+	return erro;
+}
 
 /* (a±b) + (c±d) = (a+c) ± (b+d) */
-medida medida::operator+(const medida b){
-	return medida(medicao + b.medicao, erro + b.erro);
+medicao medicao::operator+(const medicao b){
+	return medicao(medida + b.medida, erro + b.erro);
 }
 
 /* (a±b) - (c±d) = (a-c) ± (b+d) */
-medida medida::operator-(const medida b){
-	return medida(medicao - b.medicao, erro + b.erro);
+medicao medicao::operator-(const medicao b){
+	return medicao(medida - b.medida, erro + b.erro);
 }
 
 /* (a±b) * (c±d) = (ac+bd) ± |ad+bc| */
-medida medida::operator*(const medida b){
-	return medida(medicao * b.medicao + erro * b.erro,
-		abs(medicao * b.erro + erro * b.medicao));
+medicao medicao::operator*(const medicao b){
+	return medicao(medida * b.medida + erro * b.erro,
+		abs(medida * b.erro + erro * b.medida));
 }
 
 /*  a±b     ac+bd    | ad+bc |      1   (ac+bd)   |   1   (ad+bc)| *
  * ----- = ------- ± |-------| = -------        ± |-------       | *
  *  c±d     c²-d²    | c²-d² |    c²-d²           | c²-d²        | */
-medida medida::operator/(const medida b){
-	return medida((medicao*b.medicao + erro*b.erro) /
-		((b.medicao+b.erro) * (b.medicao-b.erro)),
-		abs((medicao*b.erro + erro*b.medicao) /
-       		((b.medicao+b.erro) * (b.medicao-b.erro))));
+medicao medicao::operator/(const medicao b){
+	return medicao((medida*b.medida + erro*b.erro) /
+		((b.medida+b.erro) * (b.medida-b.erro)),
+		abs((medida*b.erro + erro*b.medida) /
+       		((b.medida+b.erro) * (b.medida-b.erro))));
 }
 
-inline double medida::operator%(const medida b){
-	return 100. * (b.medicao - medicao) / b.medicao;
+inline double medicao::operator%(const medicao b){
+	return 100. * (b.medida - medida) / b.medida;
 }
 
 /* (a±b) + c = (a+c) ± b */
-medida medida::operator+(const double a){
-	return medida(medicao + a, erro);
+medicao medicao::operator+(const double a){
+	return medicao(medida + a, erro);
 }
 
 /* (a±b) - c = (a-c) ± b */
-medida medida::operator-(const double a){
-	return medida(medicao - a, erro);
+medicao medicao::operator-(const double a){
+	return medicao(medida - a, erro);
 }
 
 /* (a±b) * c = (ac) ± |bc| = (ac) ± b*|c| */
-medida medida::operator*(const double a){
-	return medida(medicao * a, erro * abs(a));
+medicao medicao::operator*(const double a){
+	return medicao(medida * a, erro * abs(a));
 }
 
 /*  a±b     a    | b |    a     b  *
  * ----- = --- ± |---| = --- ± --- *
  *   c      c    | c |    c    |c| */
-medida medida::operator/(const double a){
-	return medida(medicao / a, erro / abs(a));
+medicao medicao::operator/(const double a){
+	return medicao(medida / a, erro / abs(a));
 }
 
-inline double medida::operator%(const double a){
-	return 100. * (a - medicao) / a;
+inline double medicao::operator%(const double a){
+	return 100. * (a - medida) / a;
 }
 
 /* a + (c±d) = (a+c) ± d */
-medida operator+(const double a, const medida b){
-	return medida(a + b.medicao, b.erro);
+medicao operator+(const double a, const medicao b){
+	return medicao(a + b.medida, b.erro);
 }
 
 /* a - (c±d) = (a-c) ± d */
-medida operator-(const double a, const medida b){
-	return medida(a - b.medicao, b.erro);
+medicao operator-(const double a, const medicao b){
+	return medicao(a - b.medida, b.erro);
 }
 
 /* a * (c±d) = (ac) ± |ad| = (ac) ± |a|*d */
-medida operator*(const double a, const medida b){
-	return medida(a * b.medicao, abs(a) * b.erro);
+medicao operator*(const double a, const medicao b){
+	return medicao(a * b.medida, abs(a) * b.erro);
 }
 
 /*   a       a*c     |  a*d  |      a    * c ± |   a   | * d *
  * ----- = ------- ± |-------| = -------       |-------|     *
  *  c±d     c²-d²    | c²-d² |    c²-d²        | c²-d² |     */
-medida operator/(const double a, const medida b){
-	double constante = a / ((b.medicao + b.erro) * (b.medicao + b.erro));
-	return medida(constante * b.medicao, abs(constante) * b.erro);
+medicao operator/(const double a, const medicao b){
+	double constante = a / ((b.medida + b.erro) * (b.medida + b.erro));
+	return medicao(constante * b.medida, abs(constante) * b.erro);
 }
 
-inline double operator%(const double a, const medida b){
-	return 100. * (b.medicao - a) / b.medicao;
+inline double operator%(const double a, const medicao b){
+	return 100. * (b.medida - a) / b.medida;
 }
 
 /* (a±b) + 1 = (a+1) ± b */
-medida medida::operator++(){
-	medicao++;
+medicao medicao::operator++(){
+	medida++;
 	return *this;
 }
 
 /* (a±b) - 1 = (a-1) ± b */
-medida medida::operator--(){
-	medicao--;
+medicao medicao::operator--(){
+	medida--;
 	return *this;
 }
 
 /* +(a±b) = (a±b) */
-medida medida::operator+(){
+medicao medicao::operator+(){
 	return *this;
 }
 
 /* -(a±b) = (-a) ± b */
-medida medida::operator-(){
-	return medida(-medicao, erro);
+medicao medicao::operator-(){
+	return medicao(-medida, erro);
 }
 
 
-medida medida::operator=(const medida b){
-	medicao = b.medicao;
+medicao medicao::operator=(const medicao b){
+	medida = b.medida;
 	erro = b.erro;
 	return *this;
 }
 
 /* (a±b) + (c±d) = (a+c) ± (b+d) */
-medida medida::operator+=(const medida b){
-	medicao += b.medicao;
+medicao medicao::operator+=(const medicao b){
+	medida += b.medida;
 	erro += b.erro;
 	return *this;
 }
 
 /* (a±b) - (c±d) = (a-c) ± (b+d) */
-medida medida::operator-=(const medida b){
-	medicao -= b.medicao;
+medicao medicao::operator-=(const medicao b){
+	medida -= b.medida;
 	erro += b.erro;
 	return *this;
 }
 
 /* (a±b) * (c±d) = (ac+bd) ± |ad+bc| */
-medida medida::operator*=(const medida b){
-	double c = medicao * b.medicao + erro * b.erro;
-	erro = abs(medicao*b.erro + erro*b.medicao);
-	medicao = c;
+medicao medicao::operator*=(const medicao b){
+	double c = medida * b.medida + erro * b.erro;
+	erro = abs(medida*b.erro + erro*b.medida);
+	medida = c;
 	return *this;
 }
 
 /*  a±b     ac+bd    | ad+bc |      1   (ac+bd)   |   1   (ad+bc)| *
  * ----- = ------- ± |-------| = -------        ± |-------       | *
  *  c±d     c²-d²    | c²-d² |    c²-d²           | c²-d²        | */
-medida medida::operator/=(const medida b){
-	double constante = 1. / (b.medicao*b.medicao - b.erro*b.erro);
-	double c = constante * (medicao * b.medicao + erro * b.erro);
-	erro = abs(constante * (medicao * b.erro + erro * b.medicao));
-	medicao = c;
+medicao medicao::operator/=(const medicao b){
+	double constante = 1. / (b.medida*b.medida - b.erro*b.erro);
+	double c = constante * (medida * b.medida + erro * b.erro);
+	erro = abs(constante * (medida * b.erro + erro * b.medida));
+	medida = c;
 	return *this;
 }
 
 
 /* (a±b) + c = (a+c) ± b */
-medida medida::operator+=(const double a){
-	medicao += a;
+medicao medicao::operator+=(const double a){
+	medida += a;
 	return *this;
 }
 
 /* (a±b) - c = (a-c) ± b */
-medida medida::operator-=(const double a){
-	medicao -= a;
+medicao medicao::operator-=(const double a){
+	medida -= a;
 	return *this;
 }
 
 /* (a±b) * c = (ac) ± |bc| = (ac) ± (b*|c|) */
-medida medida::operator*=(const double a){
-	medicao *= a;
+medicao medicao::operator*=(const double a){
+	medida *= a;
 	erro *= abs(a);
 	return *this;
 }
@@ -284,100 +187,282 @@ medida medida::operator*=(const double a){
 /*  a±b     a     | b |    a      b
    ----- = --- ±  |---| = --- ±  ---
      c      c     | c |    c     |c| */
-medida medida::operator/=(const double a){
-	medicao /= a;
+medicao medicao::operator/=(const double a){
+	medida /= a;
 	erro /= abs(a);
 	return *this;
 }
 
 
-medida pow(const medida a, const double x){
-	medida aux;
-	aux.medicao = pow(a.medicao+a.erro,x);
-	aux.erro = pow(a.medicao-a.erro,x);
-	aux.medicao = (aux.medicao+aux.erro)/2;
-	aux.erro = aux.medicao-aux.erro;
+medicao pow(const medicao a, const double x){
+	medicao aux;
+	aux.medida = pow(a.medida + a.erro, x);
+	aux.erro = pow(a.medida - a.erro, x);
+	aux.medida = (aux.medida + aux.erro)/2.;
+	aux.erro = aux.medida - aux.erro;
 	return aux;
 }
 
-medida pow(const double a, const medida x){
-	double aux2 = pow(a,x.erro),aux3=pow(a,x.medicao);
-	return medida(aux3*(aux2+1./aux2)/2., aux3*(aux2-1./aux2)/2.);
+/* a^(x±y) = (a^x/2) * (a^y + 1/(a^y)) ± (a^x/2) * (a^y + 1/(a^y)) */
+medicao pow(const double a, const medicao x){
+	double aux2 = pow(a, x.erro), aux3 = pow(a, x.medida)/2.;
+	return medicao(aux3*(aux2+1./aux2), aux3*(aux2-1./aux2));
 }
 
-medida pow(const medida a, const medida x){
-	medida aux;
-	aux.medicao = pow(a.medicao+a.erro,x.medicao+x.erro);
-	aux.erro = pow(a.medicao-a.erro,x.medicao-x.erro);
-	aux.medicao = (aux.medicao+aux.erro)/2.;
-	aux.erro = aux.medicao-aux.erro;
+medicao pow(const medicao a, const medicao x){
+	medicao aux;
+	aux.medida = pow(a.medida + a.erro, x.medida + x.erro);
+	aux.erro = pow(a.medida - a.erro, x.medida - x.erro);
+	aux.medida = (aux.medida + aux.erro)/2.;
+	aux.erro = aux.medida - aux.erro;
 	return aux;
 }
 
-medida sqrt(const medida a){
-	medida aux;
-	aux.medicao = sqrt(a.medicao+a.erro);
-	aux.erro = sqrt(a.medicao-a.erro);
-	aux.medicao = (aux.medicao+aux.erro)/2.;
-	aux.erro = aux.medicao-aux.erro;
+medicao sqrt(const medicao a){
+	medicao aux;
+	aux.medida = sqrt(a.medida + a.erro);
+	aux.erro = sqrt(a.medida - a.erro);
+	aux.medida = (aux.medida + aux.erro)/2.;
+	aux.erro = aux.medida - aux.erro;
 	return aux;
 }
 
-medida cbrt(const medida a){
-	medida aux;
-	aux.medicao = cbrt(a.medicao+a.erro);
-	aux.erro = cbrt(a.medicao-a.erro);
-	aux.medicao = (aux.medicao+aux.erro)/2.;
-	aux.erro = aux.medicao-aux.erro;
-	return aux;
-}
-
-
-medida exp(const medida a){
-	double aux2 = exp(a.medicao);
-	return medida(aux2*cosh(a.erro),aux2*sinh(a.erro));
-}
-
-medida log(const medida a){
-	medida aux;
-	aux.medicao = log(a.medicao+a.erro);
-	aux.erro = log(a.medicao-a.erro);
-	aux.medicao = (aux.medicao+aux.erro)/2.;
-	aux.erro = aux.medicao-aux.erro;
+medicao cbrt(const medicao a){
+	medicao aux;
+	aux.medida = cbrt(a.medida + a.erro);
+	aux.erro = cbrt(a.medida - a.erro);
+	aux.medida = (aux.medida + aux.erro)/2.;
+	aux.erro = aux.medida - aux.erro;
 	return aux;
 }
 
 
-medida sin(const medida a){
-	return medida(sin(a.medicao), abs(cos(a.medicao) * a.erro));
+medicao exp(const medicao a){
+	double aux2 = exp(a.medida);
+	return medicao(aux2*cosh(a.erro), aux2*sinh(a.erro));
 }
 
-medida cos(const medida a){
-	return medida(cos(a.medicao), abs(sin(a.medicao) * a.erro));
-}
-
-medida tan(const medida a){
-	medida aux;
-	aux.medicao = tan(a.medicao);
-	aux.erro = 1. / cos(a.medicao);
-	aux.erro *= aux.erro * a.erro;
+medicao log(const medicao a){
+	medicao aux;
+	aux.medida = log(a.medida + a.erro);
+	aux.erro = log(a.medida - a.erro);
+	aux.medida = (aux.medida + aux.erro)/2.;
+	aux.erro = aux.medida - aux.erro;
 	return aux;
 }
 
+/* sin(a±b) = sin(a) ± |cos(a) * b - (1/2)sin(a) * b^2| */
+medicao sin(const medicao a){
+	double medida = sin(a.medida);
+	double erro = abs((cos(a.medida) - medida * a.erro / 2.) * a.erro);
 
-medida asin(const medida a){
-	return medida(asin(a.medicao), a.erro /
-		sqrt(1. - a.medicao * a.medicao));
+	if(medida + erro >= 1. && medida - erro <= -1.)
+		return medicao(0., 1.);
+	else if(medida + erro >= 1.)
+		return medicao((medida - erro + 1.)/2.,
+				(1. - medida + erro)/2.);
+	else if(medida - erro <= -1.)
+		return medicao((medida + erro - 1.)/2.,
+				(medida + erro + 1.)/2.);
+	/* else */
+	return medicao(medida, erro);
 }
 
-medida acos(const medida a){
-	return medida(acos(a.medicao), a.erro /
-		sqrt(1. - a.medicao * a.medicao));
+/* cos(a±b) = cos(a) ± |-sin(a) * b - (1/2)cos(a) * b^2| */
+medicao cos(const medicao a){
+	double medida = cos(a.medida);
+	double erro = abs((sin(a.medida) + medida * a.erro / 2.) * a.erro);
+
+	if(medida + erro >= 1. && medida - erro <= -1.)
+		return medicao(0., 1.);
+	else if(medida + erro >= 1.)
+		return medicao((medida - erro + 1.)/2.,
+				(1. - medida + erro)/2.);
+	else if(medida - erro <= -1.)
+		return medicao((medida + erro - 1.)/2.,
+				(medida + erro + 1.)/2.);
+	/* else */
+	return medicao(medida, erro);
 }
 
-medida atan(const medida a){
-	return medida(atan(a.medicao), a.erro / (1.+a.medicao * a.medicao));
+/* tan(a±b) = tan(a) ± |sec^2(a) * b + (1/2)tg(a)sec^2(x) * b^2| */
+medicao tan(const medicao a){
+	medicao aux;
+	aux.medida = tan(a.medida);
+	aux.erro = 1. / cos(a.medida);	// aux.erro = sec(a)
+	aux.erro *= aux.erro * (1 + tan(a.medida) * a.erro / 2.) * a.erro;
+	return aux;
 }
 
-#undef PI
-#undef NEPHER
+/* arcsen(a±b) = arcsen(a) ±
+ * |(1/sqrt(1 - a^2)) * b + a/2(sqrt((1 - a^2))^3) * b^2| =
+ * arcsen(a) ± |(b/sqrt(1 - a^2)) (1 + ab/2(1 - a^2))| */
+medicao asin(const medicao a){
+	double medida_2 = a.medida * a.medida;
+	double erro = a.erro/sqrt(1. - medida_2);
+	erro *= 1. + a.medida * a.erro / (2. - 2. * medida_2);
+
+	return medicao(asin(a.medida), erro);
+}
+
+/* arccos(a±b) = arccos(a) ±
+ * |-(1/sqrt(1 - a^2)) * b - a/2(sqrt((1 - a^2))^3) * b^2| =
+ * arccos(a) ± |(b/sqrt(1 - a^2)) (1 + ab/2(1 - a^2))| */
+medicao acos(const medicao a){
+	double medida_2 = a.medida * a.medida;
+	double erro = a.erro/sqrt(1. - medida_2);
+	erro *= 1. + a.medida * a.erro / (2. - 2. * medida_2);
+
+	return medicao(acos(a.medida), erro);
+}
+
+/* arctg(a±b) = arctg(a) ±
+ * |(1/(1 + a^2)) * b - (a/(1 + a^2)^2) * b^2| =
+ * arctg(a) ± |(b/(1 + a^2)) * (1 - ab/(1 + a^2))| */
+medicao atan(const medicao a){
+	double medida_2 = a.medida * a.medida;
+	double erro = a.erro / (1. + medida_2);
+	erro *= 1. - a.medida * a.erro / (1. + medida_2);
+
+	return medicao(atan(a.medida), erro);
+}
+
+void medicao::imprime(FILE *fp){
+	fprintf(fp,"(%lf ± %lf)", medida, erro);
+}
+
+medicao desvio_medio_aboluto(const double* medidas, const unsigned tam){
+	double media = 0.;
+	for(unsigned i = 0U; i < tam; i++)
+		media += *(medidas + i);
+	media /= tam;
+
+	double desvios = 0.;
+	for(unsigned i = 0U; i< tam; i++)
+		desvios += abs(*(medidas + i) - media);
+	desvios /= tam;
+
+	return medicao(media, desvios);
+}
+
+medicao desvio_padrao(const double* medidas, const unsigned tam){
+	double media = 0.;
+	for(unsigned i = 0U; i < tam; i++)
+		media += *(medidas + i);
+	media /= tam;
+
+	double desvios = 0.;
+	for(unsigned i = 0U; i< tam; i++){
+		double desvio = *(medidas + i) - media;
+		desvios += desvio * desvio;
+	}
+
+	desvios /= tam - 1U;
+	desvios = sqrt(desvios);
+
+	return medicao(media, desvios);
+}
+
+medicao desvio_padrao_media(const double* medidas, const unsigned tam){
+	double media = 0.;
+	for(unsigned i = 0U; i < tam; i++)
+		media += *(medidas + i);
+	media /= tam;
+
+	double desvios = 0.;
+	for(unsigned i = 0U; i< tam; i++){
+		double desvio = *(medidas + i) - media;
+		desvios += desvio * desvio;
+	}
+
+	desvios /= tam * (tam - 1U);
+	desvios = sqrt(desvios);
+
+	return medicao(media, desvios);
+}
+
+medicao desvio_medio_aboluto_arq(FILE* fp, const unsigned col){
+	long pos_arq = ftell(fp);
+	unsigned cont_linhas;
+	/* Conta a quantidade de \n. A quantidade de linhas é
+	 * essa quantidade + 1. */
+	for(cont_linhas = 0U; !feof(fp); cont_linhas++){
+		fscanf(fp, "%*[\n]");
+	}
+	cont_linhas++;
+
+	fseek(fp, pos_arq, SEEK_SET);
+	double vet_med[cont_linhas];
+	for(unsigned i = 0U; i < cont_linhas; i++){
+		fscanf(fp, "%lf", vet_med + i);
+		fscanf(fp, "%*f");
+	}
+
+	return desvio_medio_aboluto(vet_med, cont_linhas);
+}
+
+medicao desvio_padrao_arq(FILE* fp, const unsigned col){
+	long pos_arq = ftell(fp);
+	unsigned cont_linhas;
+	/* Conta a quantidade de \n. A quantidade de linhas é
+	 * essa quantidade + 1. */
+	for(cont_linhas = 0U; !feof(fp); cont_linhas++){
+		fscanf(fp, "%*[\n]");
+	}
+	cont_linhas++;
+
+	fseek(fp, pos_arq, SEEK_SET);
+	double vet_med[cont_linhas];
+	for(unsigned i = 0U; i < cont_linhas; i++){
+		fscanf(fp, "%lf", vet_med + i);
+		fscanf(fp, "%*f");
+	}
+
+	return desvio_padrao(vet_med, cont_linhas);
+}
+
+medicao desvio_padrao_media_arq(FILE* fp, const unsigned col){
+	long pos_arq = ftell(fp);
+	unsigned cont_linhas;
+	/* Conta a quantidade de \n. A quantidade de linhas é
+	 * essa quantidade + 1. */
+	for(cont_linhas = 0U; !feof(fp); cont_linhas++){
+		fscanf(fp, "%*[\n]");
+	}
+	cont_linhas++;
+
+	fseek(fp, pos_arq, SEEK_SET);
+	double vet_med[cont_linhas];
+	for(unsigned i = 0U; i < cont_linhas; i++){
+		fscanf(fp, "%lf", vet_med + i);
+		fscanf(fp, "%*f");
+	}
+
+	return desvio_padrao_media(vet_med, cont_linhas);
+}
+
+medicao desvio_medio_aboluto_arquivo(const char* nome_arq,
+					const unsigned col){
+	FILE *fp = fopen(nome_arq, "r");
+	medicao res = desvio_medio_aboluto_arq(fp, col);
+	fclose(fp);
+	return res;
+}
+
+medicao desvio_padrao_arquivo(const char* nome_arq,
+					const unsigned col){
+	FILE *fp = fopen(nome_arq, "r");
+	medicao res = desvio_padrao_arq(fp, col);
+	fclose(fp);
+	return res;
+}
+
+medicao desvio_padrao_media_arquivo(const char* nome_arq,
+					const unsigned col){
+	FILE *fp = fopen(nome_arq, "r");
+	medicao res = desvio_padrao_media_arq(fp, col);
+	fclose(fp);
+	return res;
+}
+
+#endif /* MEDIDA_C */
