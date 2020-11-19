@@ -36,9 +36,7 @@
 
 #include"medida.h"
 #include<math.h>
-
-/* Função absoluto para doubles */
-inline double abs(double x) { return (x<0)?-(x):x; }
+#include<omp.h>
 
 medicao::medicao() : medida(0.), erro(0.){}
 
@@ -366,12 +364,16 @@ void medicao::imprime(FILE *fp){
 
 medicao desvio_medio_aboluto(const double* medidas, const unsigned tam){
 	double media = 0.;
+
+	#pragma omp parallel for reduction (+: media)
 	for(unsigned i = 0U; i < tam; i++)
 		media += *(medidas + i);
 	media /= tam;
 
 	double desvios = 0.;
-	for(unsigned i = 0U; i< tam; i++)
+
+	#pragma omp parallel for reduction (+: desvios)
+	for(unsigned i = 0U; i < tam; i++)
 		desvios += abs(*(medidas + i) - media);
 	desvios /= tam;
 
@@ -380,11 +382,15 @@ medicao desvio_medio_aboluto(const double* medidas, const unsigned tam){
 
 medicao desvio_padrao(const double* medidas, const unsigned tam){
 	double media = 0.;
+
+	#pragma omp parallel for reduction (+: media)
 	for(unsigned i = 0U; i < tam; i++)
 		media += *(medidas + i);
 	media /= tam;
 
 	double desvios = 0.;
+
+	#pragma omp parallel for reduction (+: desvios)
 	for(unsigned i = 0U; i< tam; i++){
 		double desvio = *(medidas + i) - media;
 		desvios += desvio * desvio;
@@ -398,11 +404,15 @@ medicao desvio_padrao(const double* medidas, const unsigned tam){
 
 medicao desvio_padrao_media(const double* medidas, const unsigned tam){
 	double media = 0.;
+
+	#pragma omp parallel for reduction (+: media)
 	for(unsigned i = 0U; i < tam; i++)
 		media += *(medidas + i);
 	media /= tam;
 
 	double desvios = 0.;
+
+	#pragma omp parallel for reduction (+: desvios)
 	for(unsigned i = 0U; i< tam; i++){
 		double desvio = *(medidas + i) - media;
 		desvios += desvio * desvio;
