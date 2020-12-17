@@ -50,6 +50,10 @@ double medicao::erro_associado(){
 	return erro;
 }
 
+bool medicao::in(double testar){
+	return medida - erro < testar && testar < medida + erro;
+}
+
 /* (a±b) + (c±d) = (a+c) ± (b+d) */
 medicao medicao::operator+(const medicao b){
 	return medicao(medida + b.medida, erro + b.erro);

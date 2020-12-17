@@ -61,6 +61,13 @@
 
 ---
 
+## Funções de classe
+
+- in(double)
+  Verifica se o valor está dentro da faixa de erro.
+
+---
+
 ## Funções matemáticas
 
  - `pow(medida, medida)`

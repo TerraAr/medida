@@ -57,6 +57,9 @@ class medicao{
 	double media();
 	double erro_associado();
 
+	/* Verifica se o valor está dentro da faixa de erro */
+	bool in(double testar);
+
 	/* Operadores aritméticos básicos com outro membro da mesma classe */
 	medicao operator+(const medicao) __attribute__((const));
 	medicao operator-(const medicao) __attribute__((const));
