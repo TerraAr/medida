@@ -63,7 +63,8 @@
 
 ## Funções de classe
 
-- in(double)
+ - `in(double)`
+
   Verifica se o valor está dentro da faixa de erro.
 
 ---
