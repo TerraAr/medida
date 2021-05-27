@@ -1,8 +1,8 @@
 # medida
  Protótipo de biblioteca para operação com medidas
  experimentais (com erro). Atualmente abrange as operações
- básicas (`+`, `-`, `*`, `/` e `%`), potenciação,
- radiciação e trigonométricas.  
+ básicas (`+`, `-`, `*` e `/`), potenciação, radiciação e
+ trigonométricas.  
 
  Foram criadas sobrecargas para os operadores e  as funções
  da biblioteca math para que estas trabalhem corretamente
@@ -17,8 +17,7 @@
 
  Toma-se a série de Taylor da função e trunca-se no
  *n*-ésimo termo da série, de modo que temos o resultado da
- operação sendo f(a±b) = f(a) ± f'(a) \* b + (1/2)f''(a) \*
- b ^ 2.
+ operação sendo f(a±b) = f(a) ± f'(a) \* b + ½f''(a) \* b².
 
  **Teoria do Desvio Máximo**
 
