@@ -1,7 +1,7 @@
 # medida
  Protótipo de biblioteca para operação com medidas
  experimentais (com erro). Atualmente abrange as operações
- básicas (`+`, `-`, `*` e `/`), potenciação, radiciação e
+ básicas (`+`, `-`, `*`, `/` e `%`), potenciação, radiciação e
  trigonométricas.  
 
  Foram criadas sobrecargas para os operadores e  as funções
