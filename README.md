@@ -155,8 +155,15 @@
 
 ## Funções de saída
 
- - `imprime(FILE*)`
+ - `print(FILE*)`
 
   Função que faz a saída da variável no formato
   `(medicao±erro)` através do ponteiro especificado. Caso
   não seja enviado ponteiro, a saída é feita pelo `stdout`.  
+
+ - `println(FILE*)`
+
+  Função que faz a saída da variável no formato
+  `(medicao±erro)` seguido de um fim-de-linha (`\n`) através do
+  ponteiro especificado. Caso não seja enviado ponteiro, a saída é
+  feita pelo `stdout`.  
