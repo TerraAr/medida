@@ -25,6 +25,26 @@
  tomar, sendo o resultado a média dos dois valores e o erro
  a diferença entre os extremos e a média.
 
+## Atribuição das variáveis
+ São fornecidas três maneiras de fazer a atribuição das
+ variáveis (além das funções de entrada que fazem a entrada através
+ de uma sequência de medições):
+
+ - Por inicialização  
+ Como o nome sugere é feita na criação da variável. É feita na forma
+ `medicao var(medida, erro)`.
+
+ - Pela contante ERRO  
+ Existe a constante ERRO definida como `medicao(0, 1)` ou (0 ± 1), de
+ forma que qualquer valor multiplicado por ela será entendido como
+ erro. Dessa forma, a atribuição é escrita na forma
+ `massa = leitura_balanca + erro_balanca * ERRO`.
+
+ - Pela função ERROR(x)  
+ A função expansível ERROR(x) transforma o valor x em erro, de forma
+ que ficará como (0 ± x). Expressões de atribuição podem ser escritas
+ na forma `massa = leitura_balanca + ERROR(erro_balanca)`.
+
 ## Operadores
 
   Foram construídos todos os operadores binários e unários

@@ -44,6 +44,9 @@
 #define acsc(x) asin(1/x)
 #define acot(x) atan(1/x)
 
+#define ERRO medicao(0., 1.)
+#define ERROR(x) medicao(0., x)
+
 class medicao{
 	private:
 	double medida, erro;
