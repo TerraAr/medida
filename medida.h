@@ -132,8 +132,9 @@ class medicao{
 	friend medicao acos(const medicao);
 	friend medicao atan(const medicao);
 
-	/* Função de saída */
-	void imprime(FILE *fp = stdout);
+	/* Funções de saída */
+	void print(FILE *fp = stdout);
+	void println(FILE *fp = stdout);
 };
 
 medicao desvio_medio_aboluto(const double* medidas, const unsigned tam);

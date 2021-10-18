@@ -362,8 +362,12 @@ medicao atan(const medicao a){
 	return medicao(atan(a.medida), erro);
 }
 
-void medicao::imprime(FILE *fp){
+void medicao::print(FILE *fp){
 	fprintf(fp,"(%lf ± %lf)", medida, erro);
+}
+
+void medicao::println(FILE *fp){
+	fprintf(fp,"(%lf ± %lf)\n", medida, erro);
 }
 
 medicao desvio_medio_aboluto(const double* medidas, const unsigned tam){
